@@ -1,0 +1,1 @@
+CREATE ROLE tidsur LOGIN CREATEDB PASSWORD 'tidsur';

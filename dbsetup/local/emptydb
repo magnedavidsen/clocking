@@ -1,0 +1,7 @@
+#! /bin/bash
+
+echo "Removing all employees and events"
+psql -d tidsur -U tidsur < delete_employees.sql
+psql -d tidsur -U tidsur < delete_events.sql
+
+echo "Done!"
