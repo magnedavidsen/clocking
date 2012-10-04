@@ -6,6 +6,6 @@ CREATE TABLE employees (
 CREATE TABLE events (
        id serial PRIMARY KEY,
        type text,
-       time timestamp,
+       time timestamp default now(),
        employee_id integer REFERENCES employees (id)
 );
