@@ -4,3 +4,8 @@ pom.xml
 /classes/
 .lein-deps-sum
 .cake
+/native/
+.lein-failures
+.DS_Store
+/target/
+/ldk/
