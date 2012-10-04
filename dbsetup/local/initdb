@@ -1,14 +1,11 @@
 #! /bin/bash
 
 # loginuser
-echo "Create a user with the same name as your linux login:"
-sudo createuser -s -U postgres
+echo "Creating clocking user"
+psql < create_user.sql
 
-echo "Creating tidsur user"
-psql -d postgres -U postgres < create_user.sql
-
-echo "Creating tidsur db with tables" 
-psql -d postgres -U groceries < create_database.sql
-psql -d groceries -U groceries < create_tables.sql
+echo "Creating clocking db with tables" 
+psql -d postgres -U clocking < create_database.sql
+psql -d clocking -U clocking < create_tables.sql
 
 echo "Done!"

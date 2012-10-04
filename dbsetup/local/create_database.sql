@@ -1,1 +1,1 @@
-CREATE DATABASE tidsur;
+CREATE DATABASE clocking;

@@ -1,26 +1,11 @@
-CREATE TABLE users (
-       id serial PRIMARY KEY,
-       username text,
-       email text,
-       password text
-);
-
-CREATE TABLE lists (
-       id serial PRIMARY KEY,
+CREATE TABLE employees (
+       id integer PRIMARY KEY,
        name text
 );
 
-CREATE TABLE items (
+CREATE TABLE events (
        id serial PRIMARY KEY,
-       name text,
-       quantity integer,
-       unit text,
-       checked boolean,
-       list_id integer REFERENCES lists (id) ON DELETE CASCADE
-);
-
-CREATE TABLE users_lists (
-       user_id integer REFERENCES users (id) ON DELETE CASCADE,  
-       list_id integer REFERENCES lists (id) ON DELETE CASCADE,
-       PRIMARY KEY (user_id, list_id)       
+       type text,
+       time timestamp,
+       employee_id integer REFERENCES employees (id)
 );

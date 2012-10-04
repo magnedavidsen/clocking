@@ -1,10 +1,10 @@
 #! /bin/bash
 
-echo "Deleting db and user, creating tidsur user"
-cat drop_db_and_user.sql create_user.sql | psql -d postgres -U postgres
+echo "Deleting db and user, creating clocking user"
+cat drop_db_and_user.sql create_user.sql | psql
 
-echo "Creating tidsur db with tables" 
-psql -d postgres -U tidsur < create_database.sql
-psql -d tidsur -U tidsur < create_tables.sql
+echo "Creating clocking db with tables" 
+psql -d postgres -U clocking < create_database.sql
+psql -d clocking -U clocking < create_tables.sql
 
 echo "Done!"

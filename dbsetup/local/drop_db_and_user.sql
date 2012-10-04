@@ -1,2 +1,2 @@
-DROP DATABASE tidsur;
-DROP USER tidsur;
+DROP DATABASE clocking;
+DROP USER clocking;

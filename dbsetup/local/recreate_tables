@@ -1,8 +1,8 @@
 #! /bin/bash
 
 echo "Dropping tables..."
-psql -d tidsur -U tidsur < drop_tables.sql
+psql -d clocking -U clocking < drop_tables.sql
 echo "Creating tables..."
-psql -d tidsur -U tidsur < create_tables.sql
+psql -d clocking -U clocking < create_tables.sql
 
 echo "Done!"
