@@ -15,7 +15,7 @@
   (first (rest (rest (rest (split-url url))))))
 
 ;; Heroku configures database with environment variable
-(def database-url (System/getenv "DATABASE_URL")
+(def database-url (System/getenv "DATABASE_URL"))
 
 (if (nil? database-url)
   (if (not (nil? database-url))
@@ -28,7 +28,7 @@
                           :db "clocking"
                           :host "localhost"
                           :port "5432"}))))
-                 
+
 (defentity employees
   (pk :id)
   (table :employees)
