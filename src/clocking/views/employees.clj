@@ -5,15 +5,6 @@
         [hiccup.form]
         [hiccup.page]))
 
-(defpage "/employees" []
-  (common/layout
-   (add-employee-form)
-   (employees-table (db/list-all-employees))))
-
-(defpage [:post "/employees/add"] {:as employee}
-  (db/create-employee (Integer/parseInt  (:id employee)) (:name employee))
-  (render "/employees"))
-
 (defpartial add-employee-form []
   (form-to {:autocomplete "off"} [:post "/employees/add"]
            (label "id" "Employee ID: ")
@@ -31,3 +22,12 @@
 (defpartial employee-row [{:keys [id name]}]
   [:tr
    [:td id] [:td name]])
+
+(defpage "/employees" []
+  (common/layout
+   (add-employee-form)
+   (employees-table (db/list-all-employees))))
+
+(defpage [:post "/employees/add"] {:as employee}
+  (db/create-employee (Integer/parseInt  (:id employee)) (:name employee))
+  (render "/employees"))
