@@ -13,15 +13,15 @@
            (text-field "name")
            (submit-button "Add employee")))
 
+(defpartial employee-row [{:keys [id name]}]
+  [:tr
+   [:td id] [:td name]])
+
 (defpartial employees-table [employees]
   [:table
    [:tr
     [:th "Employee ID"] [:th "Name"]]
    (map employee-row employees)])
-
-(defpartial employee-row [{:keys [id name]}]
-  [:tr
-   [:td id] [:td name]])
 
 (defpage "/employees" []
   (common/layout
