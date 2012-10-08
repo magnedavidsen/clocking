@@ -6,24 +6,24 @@
   (:use [noir.core]
         [hiccup.form]))
 
-(defn valid? [employee_id]
-  (vali/rule (vali/min-length? employee_id 3)
-             [:employee_id "Your first name must have more than 3 numbers."])
-  (not (vali/errors? :employee_id)))
-
 (defpage "/" []
          (common/layout
-           [:p "clocking"]
-           (form-to [:post "/checkin"]
-               (text-field "employee_id")
-               (submit-button "Checkin"))))
+           [:h1 "clocking.in"]
+           (form-to {:autocomplete "off"} [:post "/clockin"]
+                    [:div {:class "label-input-row"}
+                     (label "employee-id" "id: ")
+                     (text-field {:class "employee-id" :maxlength "3" :onchange "setHiddenField()"} "employee-id")]
+                    (submit-button {:class "clock-in"} "clock in"))
+           (form-to [:post "/clockout"]
+                    (hidden-field "hidden-employee-id")
+                    (submit-button {:class "clock-out"} "clock out"))))
 
-(defpage [:post "/checkin"] {:keys [employee_id]}
-        (if (valid? employee_id)
-    (common/layout
-      [:p "You tried to checkin as " employee_id])
-    (common/layout
-      [:p "Not valid " employee_id])))
+(defpage [:post "/clockin"] {:keys [employee-id]}
+  (db/create-event "clock-in" (Integer/parseInt employee-id))
+  (common/layout
+   [:p employee-id  " has been clocked in."]))
 
-(defpage [:post "/checkout"] {:keys [employee_id]}
-  (str "You tried to checkout as " employee_id))
+(defpage [:post "/clockout"] {:keys [hidden-employee-id]}
+  (db/create-event "clock-out" (Integer/parseInt hidden-employee-id))
+  (common/layout
+   [:p hidden-employee-id " has been clocked out."]))

@@ -65,9 +65,9 @@
 (defn all-events [id]
   (select events (where {:id id})))
 
-(defn create-event [id, type, employee_id]
+(defn create-event [type, employee_id]
   (insert events
-          (values {:id id, :type type, :employee_id employee_id})))
+          (values {:type type, :employee_id employee_id})))
 
 (defn update-event [id, type]
    (update events
