@@ -13,5 +13,5 @@
 
 (defn -main []
   (print "Migrating database...") (flush)
-  (create-shouts)
+  (create-employees)
   (println " done"))
