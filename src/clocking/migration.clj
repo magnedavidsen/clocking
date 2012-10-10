@@ -9,8 +9,7 @@
     (sql/create-table :events
                       [:id :serial "PRIMARY KEY"]
                       [:type :text]
-                      [:time :timestamp ])
-    ))
+                      [:time :timestamp "DEFAULT CURRENT_TIMESTAMP"])))
 
 (defn -main []
   (print "Migrating database...") (flush)
