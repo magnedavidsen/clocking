@@ -14,20 +14,16 @@
 (defn get-db [url]
   (first (rest (rest (rest (split-url url))))))
 
-;; Heroku configures database with environment variable
-(def database-url (System/getenv "DATABASE_URL"))
+(defn get-subname [url]
+  (rest (split-url url)))
 
-(if (nil? database-url)
-  (if (not (nil? database-url))
-    (defdb dev (postgres {:db (get-db database-url)
-                          :host (get-host database-url)
-                          :port (get-port database-url)}))
-    ; assume there's a local database if database url is nil
-    (defdb dev (postgres {:user "clocking"
-                          :password "clocking"
-                          :db "clocking"
-                          :host "localhost"
-                          :port "5432"}))))
+;; Heroku configures database with environment variable
+(def db-url
+  (or (System/getenv "DATABASE_URL") "postgres://localhost:5432/clocking"))
+
+(defdb dev (postgres {:db (get-db db-url)
+                          :host (get-host db-url)
+                          :port (get-port db-url)}))
 
 (defentity employees
   (pk :id)
