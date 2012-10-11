@@ -3,8 +3,8 @@
 
 (server/load-views-ns 'clocking.views)
 
-(defn -main [& m]
-  (let [mode (keyword (or (first m) :dev))
-        port (Integer. (get (System/getenv) "PORT" "8080"))]
-    (server/start port {:mode mode
-                        :ns 'clocking})))
+(defn run-server [port]
+  (server/start port {:mode :dev :ns 'clocking}))
+
+(defn -main [& port]
+  (run-server (if (nil? port) 8080 (Integer/parseInt port))))

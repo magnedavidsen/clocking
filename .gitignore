@@ -1,11 +1,12 @@
 pom.xml
 *jar
 /lib/
-/classes/
+/classes/*
 .lein-deps-sum
 .cake
-/native/
+/native/*
 .lein-failures
 .DS_Store
-/target/
-/ldk/
+/target/*
+/ldk/*
+.DS_store
