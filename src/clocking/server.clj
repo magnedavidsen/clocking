@@ -4,7 +4,8 @@
 (server/load-views-ns 'clocking.views)
 
 (defn run-server [port]
-  (server/start port {:mode :dev :ns 'clocking}))
+  (defonce server
+  	(server/start port {:mode :dev :ns 'clocking})))
 
-(defn -main [& port]
-  (run-server (if (nil? port) 8080 (Integer/parseInt port))))
+(defn -main [port]
+  (run-server (if (nil? port) 8080 (Integer. port))))
