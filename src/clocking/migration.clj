@@ -7,7 +7,7 @@
 
 (def db
      {:classname "org.postgresql.Driver"
-      :subprotocol "postgresql"
+      :subprotocol "postgres"
       :subname subname})
 
 (defn create-employees []
