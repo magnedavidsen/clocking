@@ -19,7 +19,7 @@
 
 ;; Heroku configures database with environment variable
 (def db-url
-  (or (System/getenv "HEROKU_POSTGRESQL_JADE_URL") "postgres://localhost:5432/clocking"))
+  (or (System/getenv "DATABASE_URL") "postgres://localhost:5432/clocking"))
 
 (defdb dev (postgres {:db (get-db db-url)
                           :host (get-host db-url)
