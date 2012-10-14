@@ -3,12 +3,13 @@
             [clocking.db :as db]))
 
 (def subname
-  (str "//" (db/get-host db/db-url) ":" (db/get-port db/db-url) "/" (db/get-db db/db-url)))
+  (str "//" (:host (db/split-db-url db/db-url)) ":" (:port (db/split-db-url db/db-url)) "/" (:db (db/split-db-url db/db-url))))
 
-(def db
-     {:classname "org.postgresql.Driver"
-      :subprotocol "postgresql"
-      :subname subname})
+(def db {:classname "org.postgresql.Driver"
+         :subprotocol "postgresql"
+         :subname subname
+         :user (:user (db/split-db-url db/db-url))
+         :password (:pass (db/split-db-url db/db-url))})
 
 (defn create-employees []
   (sql/with-connection db

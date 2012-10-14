@@ -1,29 +1,18 @@
 (ns clocking.db
   (:use korma.db, korma.core))
 
-;; TODO: Use existing Java-class for this stuff
-(defn split-url [url]
-  (re-seq #"[^:\/]+" url))
-
-(defn get-host [url]
-  (first (rest (split-url url))))
-
-(defn get-port [url]
-  (first (rest (rest (split-url url)))))
-
-(defn get-db [url]
-  (first (rest (rest (rest (split-url url))))))
-
-(defn get-subname [url]
-  (rest (split-url url)))
-
 ;; Heroku configures database with environment variable
 (def db-url
-  (or (System/getenv "DATABASE_URL") "postgres://localhost:5432/clocking"))
+  (or (System/getenv "DATABASE_URL") "postgres://:@localhost:5432/clocking"))
 
-(defdb dev (postgres {:db (get-db db-url)
-                          :host (get-host db-url)
-                          :port (get-port db-url)}))
+(defn split-db-url [url]
+  "Parses database url from heroku, eg. postgres://user:pass@localhost:1234/db"
+  (let [matcher (re-matcher #"^.*://(.*?):(.*?)@(.*?):(\d+)/(.*)$" url)] ;; Setup the regex.
+    (when (.find matcher) ;; Check if it matches.
+      (zipmap [:match :user :pass :host :port :db] (re-groups matcher))))) ;; Construct an options map.
+
+
+(defdb dev (postgres (split-db-url db-url)))
 
 (defentity employees
   (pk :id)
