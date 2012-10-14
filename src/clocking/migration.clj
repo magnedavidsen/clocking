@@ -9,7 +9,7 @@
          :subprotocol "postgresql"
          :subname subname
          :user (:user (db/split-db-url db/db-url))
-         :password (:pass (db/split-db-url db/db-url))})
+         :password (:password (db/split-db-url db/db-url))})
 
 (defn create-employees []
   (sql/with-connection db

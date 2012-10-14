@@ -17,13 +17,13 @@
 (deftest url-dbconf
   (is (= "db" (:db (db/split-db-url db-url))))
   (is (= "user" (:user (db/split-db-url db-url))))
-  (is (= "pass" (:pass (db/split-db-url db-url))))
+  (is (= "pass" (:password (db/split-db-url db-url))))
   (is (= "localhost" (:host (db/split-db-url db-url))))
   (is (= "1234" (:port (db/split-db-url db-url)))))
 
 (deftest url-dbconf-without-user
   (is (= "db" (:db (db/split-db-url db-url-without-user))))
   (is (= "" (:user (db/split-db-url db-url-without-user))))
-  (is (= "" (:pass (db/split-db-url db-url-without-user))))
+  (is (= "" (:password (db/split-db-url db-url-without-user))))
   (is (= "localhost" (:host (db/split-db-url db-url-without-user))))
   (is (= "1234" (:port (db/split-db-url db-url-without-user)))))
