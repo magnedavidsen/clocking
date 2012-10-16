@@ -7,7 +7,7 @@
         [hiccup.form]))
 
 (defpage "/" []
-         (common/layout
+         (common/layout "index"
            [:h1 "clocking.in"]
            (form-to {:autocomplete "off"} [:post "/clockin"]
                     [:div {:class "label-input-row"}

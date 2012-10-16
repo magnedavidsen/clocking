@@ -3,7 +3,7 @@
 
 ;; Heroku configures database with environment variable
 (def db-url
-  (or (System/getenv "DATABASE_URL") "postgres://:@localhost:5432/clocking"))
+  (or (System/getenv "DATABASE_URL") "postgres://clocking:clocking@localhost:5432/clocking"))
 
 (defn split-db-url [url]
   "Parses database url from heroku, eg. postgres://user:pass@localhost:1234/db"

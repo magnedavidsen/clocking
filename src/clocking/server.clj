@@ -1,3 +1,4 @@
+
 (ns clocking.server
   (:require [noir.server :as server]))
 
@@ -5,7 +6,7 @@
 
 (defn run-server [port]
   (defonce server
-  	(server/start port {:mode :dev :ns 'clocking})))
+        (server/start port {:mode :dev :ns 'clocking})))
 
-(defn -main [port]
+(defn -main [& port]
   (run-server (if (nil? port) 8080 (Integer. port))))

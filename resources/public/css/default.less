@@ -1,7 +1,7 @@
 @import "elements.less";
 
-@light-blue: #79C3D2;
-@lighter-blue: #ACF5F4;
+@background: #FFF1DF;
+@th-background: #9E8668;
 
 .box-shadow (@x: 0, @y: 0, @blur: 6px, @color: #949598) {
   box-shadow: @arguments;
@@ -11,18 +11,23 @@
 
 h1{
 	font-size: 1.25em;
-	color: #4897A7;
 	text-decoration: underline;
 
 }
 
 body {
-    background-color: @light-blue;
+    background-color: @background;
     font-family: "Helvetica Neue";
     font-size: 250%;
     color: #333;
     margin-left: 0.5em;
     margin-top: 0.3em;
+    &.index{
+    	font-size: 250%;
+    }
+    &.admin{
+    	font-size: 150%;
+    }
 }
 
 input {
@@ -30,7 +35,7 @@ input {
 		font-family: "Helvetica Neue";
 		outline: none;	
 	&.employee-id{
-		width: 2em;
+		width: 2.1em;
 	}
 
 	&[type="text"]{
@@ -43,32 +48,62 @@ input {
 	}
 	&[type="submit"]{
 		-webkit-appearance: push-button;
-		.box-shadow(2px, 2px);
+		.box-shadow(3px, 3px);
 		height: 2em;
 		font-size: 1em;
 		color: #FFF;
 		width: 6em;
 		cursor: pointer;
 		font-weight: bold;
-		display: block;
 		margin-top: 0.5em;
 
 		&.clock-in{
+			clear: left;
+			display: block;
+
 			.gradient(#67A537, #67A537, #7BC144 );
+			&:hover{
+				.gradient(#7BC144, #7BC144, #A3D67B);
+				.box-shadow(1px, 1px);
+			}
 		}
 		&.clock-out{
 			.gradient(#C32219, #C32219, #E32D22 );	
+		}
+
+		&.add-employee{
+			float: left;
+			margin-bottom: 2.5em;
 		}
 	}
 }	
 
 .label-input-row{
 	margin-top: 0.5em;
-	background-color: @light-blue;
+	margin-bottom: 0.5em;
+	background-color: @background;
 	border-bottom: 1px black solid;
-	width: 6em;
+	float: left;
 
 	label{
 		margin-left: 0.1em;
 	}
+}
+
+table{
+	clear: left;
+	width: 37.1em;
+}
+
+th{
+	background-color: @th-background;
+	padding: 3px 80px 3px 5px;
+	font-weight: bold;
+	border-bottom: 1px solid black;
+
+}
+
+td{
+	padding: 0px 80px 0px 5px;
+	border-bottom: 1px solid black;
 }
