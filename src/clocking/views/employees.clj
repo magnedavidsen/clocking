@@ -5,6 +5,10 @@
         [hiccup.form]
         [hiccup.page]))
 
+
+(defn latest-action [employee-id]
+     (:time (first (db/most-recent-event employee-id))))
+
 (defpartial add-employee-form []
   (form-to {:autocomplete "off"} [:post "/employees/add"]
            [:span {:class "label-input-row"}
@@ -19,7 +23,7 @@
 
 (defpartial employee-row [{:keys [id name]}]
   [:tr
-   [:td id] [:td name] [:td "..."] [:td "Edit / Delete"]])
+   [:td id] [:td name] [:td  (latest-action id)] [:td "Edit / Delete"]])
 
 (defpartial employees-table [employees]
   [:table
@@ -29,7 +33,7 @@
 
 (defpage "/employees" []
   (common/layout "admin"
-   (h1 "Employees")
+   [:h1 "Employees"]
    (add-employee-form)
    (employees-table (db/list-all-employees))))
 

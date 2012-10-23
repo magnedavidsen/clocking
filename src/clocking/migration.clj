@@ -1,4 +1,5 @@
 (ns clocking.migration
+
   (:require [clojure.java.jdbc :as sql]
             [clocking.db :as db]))
 
@@ -22,7 +23,8 @@
     (sql/create-table :events
                       [:id :serial "PRIMARY KEY"]
                       [:type :text]
-                      [:time :timestamp "DEFAULT CURRENT_TIMESTAMP"])))
+                      [:time :timestamp "DEFAULT CURRENT_TIMESTAMP"]
+                      [:employee_id :integer "REFERENCES employees(id)"])))
 
 (defn -main []
     (print "Migrating database...") (flush)
