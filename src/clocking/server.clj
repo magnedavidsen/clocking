@@ -1,4 +1,3 @@
-
 (ns clocking.server
   (:require [noir.server :as server]))
 

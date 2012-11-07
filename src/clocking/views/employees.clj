@@ -40,3 +40,6 @@
 (defpage [:post "/employees/add"] {:as employee}
   (db/create-employee (Integer/parseInt  (:employee-id employee)) (:employee-name employee))
   (render "/employees"))
+
+(defpage "/employees/:id" []
+  [:h1 "Employee"])
