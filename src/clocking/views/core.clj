@@ -21,9 +21,11 @@
 (defpage [:post "/clockin"] {:keys [employee-id]}
   (db/create-event "clock-in" (Integer/parseInt employee-id))
   (common/layout
+   "index"
    [:p employee-id  " has been clocked in."]))
 
 (defpage [:post "/clockout"] {:keys [hidden-employee-id]}
   (db/create-event "clock-out" (Integer/parseInt hidden-employee-id))
   (common/layout
+   "index"
    [:p hidden-employee-id " has been clocked out."]))
