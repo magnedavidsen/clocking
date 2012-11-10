@@ -8,4 +8,4 @@
         (server/start port {:mode :dev :ns 'clocking})))
 
 (defn -main [& port]
-  (run-server (if (nil? port) 8080 (Integer. port))))
+  (run-server (if (nil? port) 8080 (Integer/parseInt port))))
