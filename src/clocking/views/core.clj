@@ -64,7 +64,9 @@
 
 (defpage [:post "/login"] {:keys [passphrase]}
   (cookie/put! :passphrase passphrase)
-  (resp/redirect "/"))
+  (if (= "vectra" passphrase)
+    (resp/redirect "/admin/employees")
+    (resp/redirect "/")))
 
 (defpage "/logout" []
   (cookie/put! :passphrase "")

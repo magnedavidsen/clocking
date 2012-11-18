@@ -1,10 +1,18 @@
 (ns clocking.views.employees
   (:require [clocking.views.common :as common]
-            [clocking.db :as db])
+            [clocking.db :as db]
+            [noir.cookies :as cookie]
+            [noir.response :as resp])
   (:use [noir.core]
         [hiccup.form]
         [hiccup.page]))
 
+
+;;TODO let passphrase be property
+(pre-route "/admin/*" {}
+           (when-not
+               (= "vectra" (cookie/get :passphrase))
+             (resp/redirect "/login")))
 
 (defn latest-action [employee-id]
      (:time (first (db/most-recent-event employee-id))))
@@ -31,15 +39,15 @@
     [:th "ID"] [:th "Name"] [:th "Last event"]  [:th "Change"]]
    (map employee-row employees)])
 
-(defpage "/employees" []
+(defpage "/admin/employees" []
   (common/layout "admin"
    [:h1 "Employees"]
    (add-employee-form)
    (employees-table (db/list-all-employees))))
 
-(defpage [:post "/employees/add"] {:as employee}
+(defpage [:post "/admin/employees/add"] {:as employee}
   (db/create-employee (Integer/parseInt  (:employee-id employee)) (:employee-name employee))
   (render "/employees"))
 
-(defpage "/employees/:id" []
+(defpage "/admin/employees/:id" []
   [:h1 "Employee"])
