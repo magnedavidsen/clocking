@@ -8,29 +8,31 @@
   (:use noir.core
         hiccup.form))
 
+;;TODO let passphrase be property
 (pre-route [:get ["/:path" :path #"(?!login|logout)*"]]  {}
            (when-not
                (= "stemplingsur" (cookie/get :passphrase))
              (resp/redirect "/login")))
 
 (defpage "/" []
-         (common/layout "index"
-           (form-to {:autocomplete "off"} [:post "/clockin"]
-                    [:div {:class "label-input-row"}
-                     (label "employee-id" "id: ")
-                     (text-field {:class "employee-id" :maxlength "3" :onchange "setHiddenField()"} "employee-id")]
-                    (submit-button {:class "clock-in"} "clock in"))
-           (form-to [:post "/clockout"]
-                    (hidden-field "hidden-employee-id")
-                    (submit-button {:class "clock-out"} "clock out"))
-           [:p {:class "help-text"}]))
+  (common/layout "index"
+                 (form-to {:autocomplete "off"} [:post "/clockin"]
+                          [:div {:class "label-input-row"}
+                           (label "employee-id" "id: ")
+                           (text-field {:class "employee-id" :maxlength "3" :onchange "setHiddenField()"} "employee-id")]
+                          (submit-button {:class "clock-in"} "clock in"))
+                 (form-to [:post "/clockout"]
+                          (hidden-field "hidden-employee-id")
+                          (submit-button {:class "clock-out"} "clock out"))
+                 [:p {:class "help-text"}]))
 
 (defpage [:post "/clockin"] {:keys [employee-id]}
   (if
-    (empty? (db/get-employee (Integer/parseInt employee-id)))
+      (empty? (db/get-employee (Integer/parseInt employee-id)))
     (common/layout
      "index"
-     [:p employee-id " is not a registered user."])
+     [:p employee-id " is not a registered user."]
+     [:meta {:http-equiv "refresh" :content "2;url=/"}])
     (do
       (db/create-event "clock-in" (Integer/parseInt employee-id))
       (common/layout
@@ -40,10 +42,12 @@
 
 (defpage [:post "/clockout"] {:keys [hidden-employee-id]}
   (if
-    (empty? (db/get-employee (Integer/parseInt hidden-employee-id)))
+      (empty? (db/get-employee (Integer/parseInt hidden-employee-id)))
+    (println "Someone tried clocking out with ID: " hidden-employee-id)
     (common/layout
-       "index"
-       [:p hidden-employee-id " is not a registered user."])
+     "index"
+     [:p hidden-employee-id " is not a registered user."]
+     [:meta {:http-equiv "refresh" :content "2;url=/"}])
     (do
       (db/create-event "clock-out" (Integer/parseInt hidden-employee-id))
       (common/layout
@@ -53,10 +57,10 @@
 
 (defpage "/login" []
   (common/layout "index"
-    (form-to {:autocomplete "off"} [:post "/login"]
-             [:div {:class "label-input-row"}
-               (text-field {:class "passphrase" :size "10" :maxlength "20"} "passphrase")]
-             (submit-button {:class "log-in"} "log in"))))
+                 (form-to {:autocomplete "off"} [:post "/login"]
+                          [:div {:class "label-input-row"}
+                           (text-field {:class "passphrase" :size "10" :maxlength "20"} "passphrase")]
+                          (submit-button {:class "log-in"} "log in"))))
 
 (defpage [:post "/login"] {:keys [passphrase]}
   (cookie/put! :passphrase passphrase)
