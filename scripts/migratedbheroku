@@ -1,0 +1,1 @@
+heroku run "lein run -m clocking.migration" --app clocking-dmpartner
