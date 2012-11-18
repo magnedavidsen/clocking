@@ -29,10 +29,12 @@
 (defpage [:post "/clockin"] {:keys [employee-id]}
   (if
       (empty? (db/get-employee (Integer/parseInt employee-id)))
-    (common/layout
-     "index"
-     [:p employee-id " is not a registered user."]
-     [:meta {:http-equiv "refresh" :content "2;url=/"}])
+    (do
+      (println "Someone tried clocking in with ID: " employee-id)
+      (common/layout
+          "index"
+          [:p employee-id " is not a registered user."]
+          [:meta {:http-equiv "refresh" :content "2;url=/"}]))
     (do
       (db/create-event "clock-in" (Integer/parseInt employee-id))
       (common/layout
@@ -43,11 +45,12 @@
 (defpage [:post "/clockout"] {:keys [hidden-employee-id]}
   (if
       (empty? (db/get-employee (Integer/parseInt hidden-employee-id)))
-    (println "Someone tried clocking out with ID: " hidden-employee-id)
-    (common/layout
-     "index"
-     [:p hidden-employee-id " is not a registered user."]
-     [:meta {:http-equiv "refresh" :content "2;url=/"}])
+    (do
+      (println "Someone tried clocking out with ID: " hidden-employee-id)
+      (common/layout
+       "index"
+       [:p hidden-employee-id " is not a registered user."]
+       [:meta {:http-equiv "refresh" :content "2;url=/"}]))
     (do
       (db/create-event "clock-out" (Integer/parseInt hidden-employee-id))
       (common/layout
