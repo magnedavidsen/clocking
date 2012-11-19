@@ -18,7 +18,7 @@
      (:time (first (db/most-recent-event employee-id))))
 
 (defpartial add-employee-form []
-  (form-to {:autocomplete "off"} [:post "/employees/add"]
+  (form-to {:autocomplete "off"} [:post "/admin/employees/add"]
            [:span {:class "label-input-row"}
             (label "employee-id" "id: ")
             (text-field {:class "employee-id" :maxlength "3"} "employee-id")]
