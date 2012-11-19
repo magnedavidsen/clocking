@@ -47,7 +47,7 @@
 
 (defpage [:post "/admin/employees/add"] {:as employee}
   (db/create-employee (Integer/parseInt  (:employee-id employee)) (:employee-name employee))
-  (render "/employees"))
+  (render "/admin/employees"))
 
 (defpage "/admin/employees/:id" []
   [:h1 "Employee"])
