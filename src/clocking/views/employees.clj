@@ -31,7 +31,7 @@
 
 (defpartial employee-row [{:keys [id name]}]
   [:tr
-   [:td id] [:td name] [:td  (latest-action id)] [:td "Edit / Delete"]])
+   [:td id] [:td name] [:td {:class "timestamp"} (latest-action id)] [:td "Edit / Delete"]])
 
 (defpartial employees-table [employees]
   [:table
