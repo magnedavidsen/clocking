@@ -15,7 +15,7 @@
              (resp/redirect "/login")))
 
 (defn latest-action [employee-id]
-     (:time (first (db/most-recent-event employee-id))))
+     (:time (last (db/most-recent-event employee-id))))
 
 (defpartial add-employee-form []
   (form-to {:autocomplete "off"} [:post "/admin/employees/add"]
