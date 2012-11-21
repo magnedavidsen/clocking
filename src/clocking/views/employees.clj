@@ -5,7 +5,8 @@
             [noir.response :as resp])
   (:use [noir.core]
         [hiccup.form]
-        [hiccup.page]))
+        [hiccup.page]
+        [hiccup.element]))
 
 
 ;;TODO let passphrase be property
@@ -31,12 +32,13 @@
 
 (defpartial employee-row [{:keys [id name]}]
   [:tr
-   [:td id] [:td name] [:td {:class "timestamp"} (latest-action id)] [:td "Edit / Delete"]])
+   [:td id] [:td name] [:td {:class "timestamp"} (latest-action id)]
+   [:td (link-to (str  "/admin/employees/" id) "Report")]])
 
 (defpartial employees-table [employees]
   [:table
    [:tr
-    [:th "ID"] [:th "Name"] [:th "Last event"]  [:th "Change"]]
+    [:th "ID"] [:th "Name"] [:th "Last event"] [:th ""]]
    (map employee-row employees)])
 
 (defpage "/admin/employees" []
@@ -54,8 +56,15 @@
    [:td {:class "date"} time] [:td {:class "time"} time] [:td type]])
 
 (defpage "/admin/employees/:id" {:keys [id]}
-  (common/layout "admin"
-    [:table
-      [:tr
-        [:th "Date"] [:th "Time"] [:th "Event" ]]
-          (map event-row (db/all-events (Integer/parseInt  id)))]))
+  (let [id-int (Integer/parseInt id)]
+    (common/layout "admin"
+                   [:h1 (:name (first  (db/get-employee id-int)))]
+                   [:table
+                    [:tr
+                     [:th "Date"] [:th "Time"] [:th "Event" ]]
+                    (map event-row (db/all-events id-int))])))
+
+
+
+
+
