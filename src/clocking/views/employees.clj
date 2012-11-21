@@ -49,5 +49,13 @@
   (db/create-employee (Integer/parseInt  (:employee-id employee)) (:employee-name employee))
   (render "/admin/employees"))
 
-(defpage "/admin/employees/:id" []
-  [:h1 "Employee"])
+(defpartial event-row [{:keys [time type]}]
+  [:tr
+   [:td {:class "date"} time] [:td {:class "time"} time] [:td type]])
+
+(defpage "/admin/employees/:id" {:keys [id]}
+  (common/layout "admin"
+    [:table
+      [:tr
+        [:th "Date"] [:th "Time"] [:th "Event" ]]
+          (map event-row (db/all-events (Integer/parseInt  id)))]))
