@@ -11,7 +11,9 @@
 ;;TODO let passphrase be property
 (pre-route [:get ["/:path" :path #"(?!login|logout)*"]]  {}
            (when-not
-               (= "stemplingsur" (cookie/get :passphrase))
+               (or
+                (= "stemplingsur" (cookie/get :passphrase))
+                (= "vectra" (cookie/get :passphrase)))
              (resp/redirect "/login")))
 
 (defpage "/" []
