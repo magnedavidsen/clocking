@@ -30,13 +30,13 @@
 
 (defpartial employee-row [{:keys [id name]}]
   [:tr
-   [:td {:class (if (employee/working-now? id) "working-true" "working-false")}] [:td id] [:td name] [:td {:class "timestamp"} (:time (db/most-recent-event id))]
+   [:td id] [:td {:class (if (employee/working-now? id) "online icon" "offline icon")} "&#128100;"] [:td name] [:td {:class "timestamp"} (:time (db/most-recent-event id))]
    [:td (link-to (str  "/admin/employees/" id) "Report")]])
 
 (defpartial employees-table [employees]
   [:table
    [:tr
-   [:th ""] [:th "ID"] [:th "Name"] [:th "Last event"] [:th ""]]
+   [:th "ID"] [:th ""] [:th "Name"] [:th "Last event"] [:th ""]]
    (map employee-row employees)])
 
 (defpage "/admin/employees" []
