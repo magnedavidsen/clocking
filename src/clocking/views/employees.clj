@@ -1,6 +1,7 @@
 (ns clocking.views.employees
   (:require [clocking.views.common :as common]
             [clocking.db :as db]
+            [clocking.models.employees :as employee]
             [noir.cookies :as cookie]
             [noir.response :as resp])
   (:use [noir.core]
@@ -14,9 +15,6 @@
            (when-not
                (= "vectra" (cookie/get :passphrase))
              (resp/redirect "/login")))
-
-(defn latest-action [employee-id]
-     (:time (last (db/most-recent-event employee-id))))
 
 (defpartial add-employee-form []
   (form-to {:autocomplete "off"} [:post "/admin/employees/add"]
@@ -32,13 +30,13 @@
 
 (defpartial employee-row [{:keys [id name]}]
   [:tr
-   [:td id] [:td name] [:td {:class "timestamp"} (latest-action id)]
+   [:td {:class (if (employee/working-now? id) "working-true" "working-false")}] [:td id] [:td name] [:td {:class "timestamp"} (:time (db/most-recent-event id))]
    [:td (link-to (str  "/admin/employees/" id) "Report")]])
 
 (defpartial employees-table [employees]
   [:table
    [:tr
-    [:th "ID"] [:th "Name"] [:th "Last event"] [:th ""]]
+   [:th ""] [:th "ID"] [:th "Name"] [:th "Last event"] [:th ""]]
    (map employee-row employees)])
 
 (defpage "/admin/employees" []
@@ -63,8 +61,3 @@
                     [:tr
                      [:th "Date"] [:th "Time"] [:th "Event" ]]
                     (map event-row (db/all-events id-int))])))
-
-
-
-
-

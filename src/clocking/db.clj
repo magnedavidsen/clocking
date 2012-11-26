@@ -32,7 +32,6 @@
   (delete employees
           (where {:id id})))
 
-
 (defn list-all-employees []
   (select employees))
 
@@ -51,7 +50,8 @@
   (select events (where {:employee_id employee_id})))
 
 (defn most-recent-event [employee_id]
-  (select events (where {:employee_id employee_id})))
+  (first
+   (select events (where {:employee_id employee_id}) (limit 1) (order :time :DESC))))
 
 (defn create-event [type, employee_id]
   (insert events
