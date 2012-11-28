@@ -31,9 +31,18 @@ function formatTimestamp(datestring){
 function setHiddenField(){
 	var employee_id = $("#employee-id").val();
 	$("#hidden-employee-id").val(employee_id);
+
+}
+
+function updateInput(key, value){
+	$('.employee-id').val(value);
+	$('.employee-id').focus();
+	
 }
 
 $(document).ready(function(){
+	$('.keypad').keypad({onKeypress: updateInput, layout: ['123', '456', '789', '0' + $.keypad.CLEAR]});
+
 	$('.timestamp').each(function(index, data){
 		var date = $(data).html();
 		$(data).html(formatTimestamp(date));

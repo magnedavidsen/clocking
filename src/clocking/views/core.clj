@@ -18,15 +18,17 @@
 
 (defpage "/" []
   (common/layout "index"
-                 (form-to {:autocomplete "off"} [:post "/clockin"]
-                          [:div {:class "label-input-row"}
-                           (label "employee-id" "id: ")
-                           (text-field {:class "employee-id" :maxlength "3" :onchange "setHiddenField()"} "employee-id")]
-                          (submit-button {:class "clock-in"} "clock in"))
-                 (form-to [:post "/clockout"]
-                          (hidden-field "hidden-employee-id")
-                          (submit-button {:class "clock-out"} "clock out"))
-                 [:p {:class "help-text"}]))
+                 [:div {:class "form"}
+                  (form-to {:autocomplete "off"} [:post "/clockin"]
+                           [:div {:class "label-input-row"}
+                            (label "employee-id" "id: ")
+                            (text-field {:class "employee-id" :maxlength "3" :onchange "setHiddenField()"} "employee-id")]
+                           (submit-button {:class "clock-in"} "clock in"))
+                  (form-to [:post "/clockout"]
+                           (hidden-field "hidden-employee-id")
+                           (submit-button {:class "clock-out"} "clock out"))
+                  [:p {:class "help-text"}]]
+                 [:div {:class "keypad"}]))
 
 (defpage [:post "/clockin"] {:keys [employee-id]}
   (if
@@ -34,9 +36,9 @@
     (do
       (println "Someone tried clocking in with ID: " employee-id)
       (common/layout
-          "index"
-          [:p employee-id " is not a registered user."]
-          [:meta {:http-equiv "refresh" :content "2;url=/"}]))
+       "index"
+       [:p employee-id " is not a registered user."]
+       [:meta {:http-equiv "refresh" :content "2;url=/"}]))
     (do
       (db/create-event "clock-in" (Integer/parseInt employee-id))
       (common/layout
