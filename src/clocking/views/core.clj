@@ -27,8 +27,7 @@
                   (form-to [:post "/clockout"]
                            (hidden-field "hidden-employee-id")
                            (submit-button {:class "clock-out"} "clock out"))
-                  [:p {:class "help-text"}]]
-                 [:div {:class "keypad"}]))
+                  [:p {:class "help-text"}]]))
 
 (defpage [:post "/clockin"] {:keys [employee-id]}
   (if
