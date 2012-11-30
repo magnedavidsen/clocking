@@ -22,7 +22,7 @@
                   (form-to {:autocomplete "off"} [:post "/clockin"]
                            [:div {:class "label-input-row"}
                             (label "employee-id" "id: ")
-                            [:input {:class "employee-id" :maxlength "3" :onchange "setHiddenField()" :autofocus "autofocus" :type "number" :id "employee-id"}]]
+                            [:input {:class "employee-id" :maxlength "3" :onchange "setHiddenField()" :autofocus "autofocus" :type "number" :id "employee-id" :pattern "[0-9]*"}]]
                            (submit-button {:class "clock-in"} "clock in"))
                   (form-to [:post "/clockout"]
                            (hidden-field "hidden-employee-id")

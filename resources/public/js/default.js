@@ -50,8 +50,6 @@ $(document).ready(function(){
 		$(data).html(formatTime(date));
 	});
 
-	$('.employee-id').focus();
-
 	$('.employee-id').keypress(function(event){
 
 	   	//if enter pressed, don't do anything
