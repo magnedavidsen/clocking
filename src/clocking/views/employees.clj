@@ -59,5 +59,5 @@
                    [:h1 (:name (first  (db/get-employee id-int)))]
                    [:table
                     [:tr
-                     [:th "Date"] [:th "Time"] [:th "Event" ]]
+                     [:th "Date"] [:th "Clocked in"] [:th "Clocked out" ]]
                     (map event-row (db/all-events id-int))])))
