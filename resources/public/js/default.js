@@ -3,6 +3,7 @@ function formatDate(datestring, showRelativeDate){
 	var date = new Date(datestring);
 	var weekday = date.toLocaleDateString().split(",")[0];
 	var month = date.toLocaleDateString().split(",")[1].split(" ")[1].toLowerCase();
+	var monthnumber = date.getMonth() + 1;
 
 	if(Date.isToday(date) && showRelativeDate){
 		return "Today";
@@ -11,21 +12,28 @@ function formatDate(datestring, showRelativeDate){
 	} else if(Date.isLessThanWeekAgo(date) && showRelativeDate){
 		return weekday;
 	} else if(Date.isThisYear(date)){
-		return date.getDate() + ". " + month;
+		return date.getDate() + "/" + monthnumber ;
 	}else{
-		return date.getDate() + ". " + month + date.getFullYear();
+		return date.getDate() + "/" + monthnumber + "/" + date.getFullYear();
 	}
 }
 
 function formatTime(datestring){
-	var date = new Date(datestring);
-	return date.toLocaleTimeString();
+	if(datestring){
+		return new Date(datestring).toLocaleTimeString();
+	}
 }
 
 function formatTimestamp(datestring){
 	if(datestring){
 		return formatDate(datestring, true) + ", " + formatTime(datestring);
 	}
+}
+
+function formatMinutes(minutes){	
+	var newMinutes = minutes % 60;
+	var hours = (minutes - newMinutes)/60;
+	return hours + "h " + newMinutes + "m";
 }
 
 function setHiddenField(){
@@ -48,6 +56,11 @@ $(document).ready(function(){
 	$('.time').each(function(index, data){
 		var date = $(data).html();
 		$(data).html(formatTime(date));
+	});
+
+	$('.interval-minutes').each(function(index, data){
+		var date = $(data).html();
+		$(data).html(formatMinutes(date));
 	});
 
 	$('.employee-id').keypress(function(event){

@@ -1,6 +1,7 @@
 (ns clocking.views.employees
   (:require [clocking.views.common :as common]
             [clocking.db :as db]
+            [clocking.models.events :as events]
             [clocking.models.employees :as employee]
             [noir.cookies :as cookie]
             [noir.response :as resp])
@@ -49,9 +50,10 @@
   (db/create-employee (Integer/parseInt  (:employee-id employee)) (:employee-name employee))
   (render "/admin/employees"))
 
-(defpartial event-row [{:keys [time type]}]
+(defpartial event-row [{:keys [date clock-in clock-out]}]
   [:tr
-   [:td {:class "date"} time] [:td {:class "time"} time] [:td type]])
+   [:td {:class "date"} date] [:td {:class "time"} clock-in]
+   [:td {:class "time"} clock-out][:td {:class "interval-minutes"} (events/time-between-timestamps clock-in clock-out)]])
 
 (defpage "/admin/employees/:id" {:keys [id]}
   (let [id-int (Integer/parseInt id)]
@@ -59,5 +61,5 @@
                    [:h1 (:name (first  (db/get-employee id-int)))]
                    [:table
                     [:tr
-                     [:th "Date"] [:th "Clocked in"] [:th "Clocked out" ]]
-                    (map event-row (db/all-events id-int))])))
+                     [:th "Date"] [:th "Clocked in"] [:th "Clocked out" ] [:th "Sum"]]
+                    (map event-row (events/get-all-events-for-employee id-int))])))
