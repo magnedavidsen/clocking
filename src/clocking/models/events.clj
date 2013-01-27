@@ -1,12 +1,12 @@
 (ns clocking.models.events
-  (:require [clocking.db :as db])
+  (:require [clocking.db :as db]
+            [clj-time.core :as time])
   (:use
-   [clj-time.core]
    [clj-time.coerce]))
 
 (defn same-day? [first-event second-event]
   (let [first-date (from-sql-date (:time first-event)) second-date (from-sql-date (:time second-event))]
-    (= (day first-date) (day second-date))))
+    (= (time/day first-date) (time/day second-date))))
 
 (defn proper-pair? [first-event second-event]
   (if (nil? second-event)
@@ -39,4 +39,4 @@
 
 (defn time-between-timestamps [timestamp-one timestamp-two]
   (if (not-any? nil? [timestamp-one timestamp-two])
-    (in-minutes (interval (from-sql-date timestamp-one) (from-sql-date timestamp-two)))))
+    (time/in-minutes (time/interval (from-sql-date timestamp-one) (from-sql-date timestamp-two)))))
