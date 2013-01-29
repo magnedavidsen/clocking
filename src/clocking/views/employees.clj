@@ -4,7 +4,9 @@
             [clocking.models.events :as events]
             [clocking.models.employees :as employee]
             [noir.cookies :as cookie]
-            [noir.response :as resp])
+            [noir.response :as resp]
+            [cheshire.core :refer :all]
+            )
   (:use [noir.core]
         [hiccup.form]
         [hiccup.page]
@@ -66,9 +68,5 @@
 
 (defpage "/admin/json/employees/:id" {:keys [id]}
   (let [id-int (Integer/parseInt id)]
-    (common/layout "admin"
-                   [:h1 (:name (first  (db/get-employee id-int)))]
-                   [:table
-                    [:tr
-                     [:th "Date"] [:th "Clocked in"] [:th "Clocked out" ] [:th "Sum"]]
-                    (map event-row (events/get-all-events-for-employee id-int))])))
+    (generate-string
+     (events/get-all-events-for-employee id-int))))
