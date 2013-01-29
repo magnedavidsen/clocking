@@ -63,3 +63,12 @@
                     [:tr
                      [:th "Date"] [:th "Clocked in"] [:th "Clocked out" ] [:th "Sum"]]
                     (map event-row (events/get-all-events-for-employee id-int))])))
+
+(defpage "/admin/json/employees/:id" {:keys [id]}
+  (let [id-int (Integer/parseInt id)]
+    (common/layout "admin"
+                   [:h1 (:name (first  (db/get-employee id-int)))]
+                   [:table
+                    [:tr
+                     [:th "Date"] [:th "Clocked in"] [:th "Clocked out" ] [:th "Sum"]]
+                    (map event-row (events/get-all-events-for-employee id-int))])))
