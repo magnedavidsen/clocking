@@ -1,16 +1,20 @@
 (ns clocking.test.models.events
   (:use [clojure.test]
-        [clocking.models.events :as events]))
+        [clocking.models.events :as events]
+        [clj-time.coerce]
+        [clocking.db :as db]))
 
-(def event-list [
-                 {:id 1, :type "clock-out", :time #inst "2012-10-16T23:15:22.214421000-00:00", :employee_id 100}
-                 {:id 2, :type "clock-in", :time #inst "2012-10-16T23:49:07.818952000-00:00", :employee_id 100}
-                 {:id 3, :type "clock-in", :time #inst "2012-10-16T23:49:07.818952000-00:00", :employee_id 100}
-                 {:id 4, :type "clock-out", :time #inst "2012-10-16T23:49:07.818952000-00:00", :employee_id 100}
-                 {:id 5, :type "clock-out", :time #inst "2012-10-16T23:49:07.818952000-00:00", :employee_id 100}
-                 ])
+(def event-list
+  (map db/convert-date
+       [
+        {:id 1, :type "clock-out", :time #inst "2012-10-16T23:15:22.214421000-00:00", :employee_id 100}
+        {:id 2, :type "clock-in", :time #inst "2012-10-16T23:49:07.818952000-00:00", :employee_id 100}
+        {:id 3, :type "clock-in", :time #inst "2012-10-16T23:49:07.818952000-00:00", :employee_id 100}
+        {:id 4, :type "clock-out", :time #inst "2012-10-16T23:49:07.818952000-00:00", :employee_id 100}
+        {:id 5, :type "clock-out", :time #inst "2012-10-16T23:49:07.818952000-00:00", :employee_id 100}
+        ]))
 
-(def wanted-format [
+(def wanted-format  [
                     [{:type "clock-out", :employee_id 100, :time #inst "2012-10-16T23:15:22.214-00:00", :id 1}]
                     [{:type "clock-in", :employee_id 100, :time #inst "2012-10-16T23:49:07.818-00:00", :id 2}]
                     [{:type "clock-in", :employee_id 100, :time #inst "2012-10-16T23:49:07.818-00:00", :id 3}
@@ -19,15 +23,17 @@
                     ])
 
 (def one-event
-  [{:type "clock-in", :employee_id 100, :time #inst "2012-10-16T23:49:07.818-00:00", :id 3}])
+  [(db/convert-date {:type "clock-in", :employee_id 100, :time #inst "2012-10-16T23:49:07.818-00:00", :id 3})])
 
 (def two-events
-  [{:type "clock-in", :employee_id 100, :time #inst "2012-10-16T23:49:07.818-00:00", :id 3}
-   {:type "clock-out", :employee_id 100, :time #inst "2012-10-16T23:49:07.818-00:00", :id 4}])
+  (map db/convert-date
+       [{:type "clock-in", :employee_id 100, :time #inst "2012-10-16T23:49:07.818-00:00", :id 3}
+        {:type "clock-out", :employee_id 100, :time #inst "2012-10-16T23:49:07.818-00:00", :id 4}]))
 
 (def two-events-different-days
-  [{:type "clock-in", :employee_id 100, :time #inst "2012-10-16T23:49:07.818-00:00", :id 3}
-   {:type "clock-out", :employee_id 100, :time #inst "2012-10-17T23:49:07.818-00:00", :id 4}])
+  (map db/convert-date
+       [{:type "clock-in", :employee_id 100, :time #inst "2012-10-16T23:49:07.818-00:00", :id 3}
+        {:type "clock-out", :employee_id 100, :time #inst "2012-10-17T23:49:07.818-00:00", :id 4}]))
 
 (def one-event-flattened
   {:employee_id 100, :date #inst "2012-10-16T23:49:07.818-00:00", :clock-in #inst "2012-10-16T23:49:07.818-00:00"})
