@@ -51,12 +51,12 @@
 {:time (from-sql-date (:time event)) :type (:type event) :id (:id event) :employee_id (:employee_id event)})
 
 (defn all-events [employee-id]
-  (map convert-date  
+  (map convert-date
        (select events (where {:employee_id employee-id}))))
 
 (defn most-recent-event [employee_id]
-  (first
-   (select events (where {:employee_id employee_id}) (limit 1) (order :time :DESC))))
+  (convert-date (first
+    (select events (where {:employee_id employee_id}) (limit 1) (order :time :DESC)))))
 
 (defn create-event [type, employee_id]
   (insert events
@@ -69,41 +69,3 @@
 
 (defn delete-event [id]
   (delete events (where {:id id})))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
