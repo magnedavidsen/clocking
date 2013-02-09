@@ -5,7 +5,7 @@
    [clj-time.coerce]))
 
 (defn same-day? [first-event second-event]
-  (let [first-date (from-sql-date (:time first-event)) second-date (from-sql-date (:time second-event))]
+  (let [first-date (:time first-event) second-date (:time second-event)]
     (= (time/day first-date) (time/day second-date))))
 
 (defn proper-pair? [first-event second-event]
@@ -39,4 +39,4 @@
 
 (defn time-between-timestamps [timestamp-one timestamp-two]
   (if (not-any? nil? [timestamp-one timestamp-two])
-    (time/in-minutes (time/interval (from-sql-date timestamp-one) (from-sql-date timestamp-two)))))
+    (time/in-minutes (time/interval  timestamp-one))))

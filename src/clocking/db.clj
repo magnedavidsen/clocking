@@ -1,5 +1,5 @@
 (ns clocking.db
-  (:use korma.db, korma.core))
+  (:use korma.db, korma.core, clj-time.coerce))
 
 ;; Heroku configures database with environment variable
 (def db-url
@@ -46,8 +46,13 @@
   (entity-fields :id :type :time :employee_id)
   (database dev))
 
-(defn all-events [employee_id]
-  (select events (where {:employee_id employee_id})))
+;todo, generalize
+(defn convert-date [event]
+{:time (from-sql-date (:time event)) :type (:type event) :id (:id event) :employee_id (:employee_id event)})
+
+(defn all-events [employee-id]
+  (map convert-date  
+       (select events (where {:employee_id employee-id}))))
 
 (defn most-recent-event [employee_id]
   (first
@@ -64,3 +69,41 @@
 
 (defn delete-event [id]
   (delete events (where {:id id})))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -6,6 +6,8 @@
             [noir.cookies :as cookie]
             [noir.response :as resp]
             [cheshire.core :refer :all]
+            [noir.fetch.remotes :refer :all]
+            [clj-time.coerce :as time]
             )
   (:use [noir.core]
         [hiccup.form]
@@ -70,3 +72,11 @@
   (let [id-int (Integer/parseInt id)]
     (generate-string
      (events/get-all-events-for-employee id-int))))
+
+;todo, writer smarter
+(defn convert-date [event]
+  {:clock-in (time/to-date (:clock-in event)) :clock-out (time/to-date (:clock-out event)) :date (time/to-date (:date event))})
+
+(defremote get-all-events [employee-id]
+  (map convert-date
+              (events/get-all-events-for-employee employee-id)))
