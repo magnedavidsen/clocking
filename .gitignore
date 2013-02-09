@@ -10,4 +10,7 @@ native/
 target/
 ldk/
 .DS_store
+.DS_Store
+out/
+repl/
 .#*
