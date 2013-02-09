@@ -59,10 +59,11 @@
   (let [id-int (Integer/parseInt id)]
     (common/layout "admin"
                    [:h1 (:name (first  (db/get-employee id-int)))]
+                   [:script {:type "text/javascript"} (str "window.employeeid = " id)]
                    [:div {:id "employee-app"}]
                    [:script {:type "text/javascript" :src "/js/cljs.js"}]
-                   [:script {:type "text/javascript"} (str "window.employeeid = " id)]
-                   [:script {:type "text/javascript"} "goog.require('clocking.client.repl')"])))
+                   (when (= (System/getenv "ENVIRONMENT") "dev")
+                     [:script {:type "text/javascript"} "goog.require('clocking.client.repl')"]))))
 
 
 ;todo, writer smarter

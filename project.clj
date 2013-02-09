@@ -17,11 +17,23 @@
             :plugins [[lein-cljsbuild "0.3.0"]]
             :cljsbuild {
                         :repl-listen-port 9000
-                        :builds [{
-                                        ; The path to the top-level ClojureScript source directory:
+                        :builds [
+
+                                 {
+
+                                  :source-paths ["src-cljs"]
+                                  :compiler {
+                                             :output-to "resources/public/js/cljs-debug.js"
+                                             :optimizations :whitespace
+                                             :pretty-print true}}
+
+                                 {
+
                                   :source-paths ["src-cljs"]
                                   :compiler {
                                              :output-to "resources/public/js/cljs.js"
-                                             :optimizations :whitespace
-                                             :pretty-print true}}]}
+                                             :externs ["resources/public/js/default.js", "resources/public/js/date.js"]
+                                             :optimizations :simple
+                                             :pretty-print false}}
+                                 ]}
             :main clocking.server)

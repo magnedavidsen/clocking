@@ -9,6 +9,8 @@
 
 (def userid js/window.employeeid)
 
+(def date-formatter (new goog.i18n.DateTimeFormat "dd/MM/yyyy"))
+
 (defn date-in-range [date from-date to-date]
   (and
    (>= 0 (goog.date.Date.compare from-date date))
@@ -20,17 +22,21 @@
     (.set date (:date event))
     {:clock-in (:clock-in event) :clock-out (:clock-out event) :date date}))
 
-(defn create-datepicker []
+(defn create-datepicker [date]
   (let [picker (new goog.ui.DatePicker)]
     (.setUseNarrowWeekdayNames picker true)
     (.setUseSimpleNavigationMenu picker true)
     (.setAllowNone picker false)
     (.setShowToday picker false)
     (.setFirstWeekday picker 0)
+    (.setDate picker date)
     picker))
 
-(def from-datepicker (create-datepicker))
-(def to-datepicker (create-datepicker))
+(def from-datepicker
+  (let [date (new goog.date.Date)]
+    (.setDate date 1)
+    (create-datepicker date)))
+(def to-datepicker (create-datepicker (new goog.date.Date)))
 
 (defn minutes-between [clock-in clock-out]
   (when (and clock-in clock-out) (.minBetween js/Date clock-in clock-out)))
@@ -38,7 +44,7 @@
 (defn event-row [{:keys [date clock-in clock-out]}]
   (template/node
    [:tr
-    [:td (.toString date)]
+    [:td (.format date-formatter date)]
     [:td (js/formatTime (str clock-in))]
     [:td (js/formatTime (str clock-out))]
     [:td (js/formatMinutes (minutes-between clock-in clock-out))]]))
@@ -49,7 +55,8 @@
 (defn employee-report [events]
   (template/node
    [:div {:class "employee-report"}
-    [:div {:id "total-hours" :class "total-hours"} (str "Total hours: " (js/formatMinutes (sum-hours events)))]
+    [:div (str "Showing hours from " (.format date-formatter (.getDate to-datepicker)) " to " (.format date-formatter (.getDate from-datepicker)) )]
+    [:div {:class "total-hours"} (str "Total hours: " (js/formatMinutes (sum-hours events)))]
     [:table [:tr [:th "Date"] [:th "Clocked in"] [:th "Clocked out" ] [:th "Sum"]]
      (map event-row events)]]))
 
@@ -70,7 +77,7 @@
     [:div {:class "datepickers"}
      [:div {:id "from-datepicker" :class "datepicker"} "From"]
      [:div {:id "to-datepicker" :class "datepicker"} "To"]]
-    (employee-report all-events)]))
+    (employee-report (filter-events-between all-events (.getDate from-datepicker) (.getDate to-datepicker)))]))
 
 (defn buildpage []
   (.log js/console "Starting to build page.")
@@ -87,9 +94,5 @@
              (.log js/console "Events returned")
              (def all-events (map convert-date-to-goog events))
              (buildpage)))
-
-
-
-
 
 (get-events-from-server)
