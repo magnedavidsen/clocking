@@ -48,7 +48,8 @@
 
 ;todo, generalize
 (defn convert-date [event]
-{:time (from-sql-date (:time event)) :type (:type event) :id (:id event) :employee_id (:employee_id event)})
+  (when-not (nil? event)
+    {:time (from-sql-date (:time event)) :type (:type event) :id (:id event) :employee_id (:employee_id event)}))
 
 (defn all-events [employee-id]
   (map convert-date

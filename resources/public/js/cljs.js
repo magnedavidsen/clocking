@@ -34841,17 +34841,35 @@ goog.provide("clocking.client.employees");
 goog.require("cljs.core");
 goog.require("dommy.template");
 goog.require("clojure.browser.dom");
+goog.require("goog.date.Date");
 goog.require("goog.ui.DatePicker");
 goog.require("goog.dom");
 goog.require("fetch.remotes");
-clocking.client.employees.datepicker = new goog.ui.DatePicker;
-clocking.client.employees.userid = 100;
-clocking.client.employees.page = function page() {
-  return dommy.template.node.call(null, cljs.core.PersistentVector.fromArray(["\ufdd0'div", cljs.core.ObjMap.fromObject(["\ufdd0'id"], {"\ufdd0'id":"wrapper"}), clocking.client.employees.employee_report.call(null, clocking.client.employees.all_events)], true))
+clocking.client.employees.userid = window.employeeid;
+clocking.client.employees.date_in_range = function date_in_range(date, from_date, to_date) {
+  var and__3822__auto__ = 0 >= goog.date.Date.compare(from_date, date);
+  if(and__3822__auto__) {
+    return 0 >= goog.date.Date.compare(date, to_date)
+  }else {
+    return and__3822__auto__
+  }
 };
-clocking.client.employees.buildpage = function buildpage() {
-  return clojure.browser.dom.replace_node.call(null, goog.dom.getElement("wrapper"), clocking.client.employees.page.call(null))
+clocking.client.employees.convert_date_to_goog = function convert_date_to_goog(event) {
+  var date = new goog.date.Date;
+  date.set((new cljs.core.Keyword("\ufdd0'date")).call(null, event));
+  return cljs.core.ObjMap.fromObject(["\ufdd0'clock-in", "\ufdd0'clock-out", "\ufdd0'date"], {"\ufdd0'clock-in":(new cljs.core.Keyword("\ufdd0'clock-in")).call(null, event), "\ufdd0'clock-out":(new cljs.core.Keyword("\ufdd0'clock-out")).call(null, event), "\ufdd0'date":date})
 };
+clocking.client.employees.create_datepicker = function create_datepicker() {
+  var picker = new goog.ui.DatePicker;
+  picker.setUseNarrowWeekdayNames(true);
+  picker.setUseSimpleNavigationMenu(true);
+  picker.setAllowNone(false);
+  picker.setShowToday(false);
+  picker.setFirstWeekday(0);
+  return picker
+};
+clocking.client.employees.from_datepicker = clocking.client.employees.create_datepicker.call(null);
+clocking.client.employees.to_datepicker = clocking.client.employees.create_datepicker.call(null);
 clocking.client.employees.minutes_between = function minutes_between(clock_in, clock_out) {
   if(cljs.core.truth_(function() {
     var and__3822__auto__ = clock_in;
@@ -34866,32 +34884,53 @@ clocking.client.employees.minutes_between = function minutes_between(clock_in, c
     return null
   }
 };
-clocking.client.employees.event_row = function event_row(p__3187) {
-  var map__3189 = p__3187;
-  var map__3189__$1 = cljs.core.seq_QMARK_.call(null, map__3189) ? cljs.core.apply.call(null, cljs.core.hash_map, map__3189) : map__3189;
-  var clock_out = cljs.core._lookup.call(null, map__3189__$1, "\ufdd0'clock-out", null);
-  var clock_in = cljs.core._lookup.call(null, map__3189__$1, "\ufdd0'clock-in", null);
-  var date = cljs.core._lookup.call(null, map__3189__$1, "\ufdd0'date", null);
-  return dommy.template.node.call(null, cljs.core.PersistentVector.fromArray(["\ufdd0'tr", cljs.core.PersistentVector.fromArray(["\ufdd0'td", formatDate([cljs.core.str(date)].join(""))], true), cljs.core.PersistentVector.fromArray(["\ufdd0'td", formatTime([cljs.core.str(clock_in)].join(""))], true), cljs.core.PersistentVector.fromArray(["\ufdd0'td", formatTime([cljs.core.str(clock_out)].join(""))], true), cljs.core.PersistentVector.fromArray(["\ufdd0'td", formatMinutes(clocking.client.employees.minutes_between.call(null, 
-  clock_in, clock_out))], true)], true))
+clocking.client.employees.event_row = function event_row(p__3708) {
+  var map__3710 = p__3708;
+  var map__3710__$1 = cljs.core.seq_QMARK_.call(null, map__3710) ? cljs.core.apply.call(null, cljs.core.hash_map, map__3710) : map__3710;
+  var clock_out = cljs.core._lookup.call(null, map__3710__$1, "\ufdd0'clock-out", null);
+  var clock_in = cljs.core._lookup.call(null, map__3710__$1, "\ufdd0'clock-in", null);
+  var date = cljs.core._lookup.call(null, map__3710__$1, "\ufdd0'date", null);
+  return dommy.template.node.call(null, cljs.core.PersistentVector.fromArray(["\ufdd0'tr", cljs.core.PersistentVector.fromArray(["\ufdd0'td", date.toString()], true), cljs.core.PersistentVector.fromArray(["\ufdd0'td", formatTime([cljs.core.str(clock_in)].join(""))], true), cljs.core.PersistentVector.fromArray(["\ufdd0'td", formatTime([cljs.core.str(clock_out)].join(""))], true), cljs.core.PersistentVector.fromArray(["\ufdd0'td", formatMinutes(clocking.client.employees.minutes_between.call(null, clock_in, 
+  clock_out))], true)], true))
+};
+clocking.client.employees.sum_hours = function sum_hours(events) {
+  return cljs.core.reduce.call(null, cljs.core._PLUS_, cljs.core.map.call(null, function(p1__3707_SHARP_) {
+    return clocking.client.employees.minutes_between.call(null, (new cljs.core.Keyword("\ufdd0'clock-in")).call(null, p1__3707_SHARP_), (new cljs.core.Keyword("\ufdd0'clock-out")).call(null, p1__3707_SHARP_))
+  }, events))
 };
 clocking.client.employees.employee_report = function employee_report(events) {
-  return dommy.template.node.call(null, cljs.core.PersistentVector.fromArray(["\ufdd0'table", cljs.core.PersistentVector.fromArray(["\ufdd0'tr", cljs.core.PersistentVector.fromArray(["\ufdd0'th", "Date"], true), cljs.core.PersistentVector.fromArray(["\ufdd0'th", "Clocked in"], true), cljs.core.PersistentVector.fromArray(["\ufdd0'th", "Clocked out"], true), cljs.core.PersistentVector.fromArray(["\ufdd0'th", "Sum"], true)], true), cljs.core.map.call(null, clocking.client.employees.event_row, events)], 
-  true))
+  return dommy.template.node.call(null, cljs.core.PersistentVector.fromArray(["\ufdd0'div", cljs.core.ObjMap.fromObject(["\ufdd0'class"], {"\ufdd0'class":"employee-report"}), cljs.core.PersistentVector.fromArray(["\ufdd0'div", cljs.core.ObjMap.fromObject(["\ufdd0'id", "\ufdd0'class"], {"\ufdd0'id":"total-hours", "\ufdd0'class":"total-hours"}), [cljs.core.str("Total hours: "), cljs.core.str(formatMinutes(clocking.client.employees.sum_hours.call(null, events)))].join("")], true), cljs.core.PersistentVector.fromArray(["\ufdd0'table", 
+  cljs.core.PersistentVector.fromArray(["\ufdd0'tr", cljs.core.PersistentVector.fromArray(["\ufdd0'th", "Date"], true), cljs.core.PersistentVector.fromArray(["\ufdd0'th", "Clocked in"], true), cljs.core.PersistentVector.fromArray(["\ufdd0'th", "Clocked out"], true), cljs.core.PersistentVector.fromArray(["\ufdd0'th", "Sum"], true)], true), cljs.core.map.call(null, clocking.client.employees.event_row, events)], true)], true))
 };
-clocking.client.employees.populate_report = function populate_report(events) {
-  return clojure.browser.dom.append.call(null, clocking.client.employees.wrapper, clocking.client.employees.employee_report.call(null, events))
+clocking.client.employees.filter_events_between = function filter_events_between(events, from_date, to_date) {
+  return cljs.core.filter.call(null, function(p1__3711_SHARP_) {
+    return clocking.client.employees.date_in_range.call(null, (new cljs.core.Keyword("\ufdd0'date")).call(null, p1__3711_SHARP_), from_date, to_date)
+  }, events)
+};
+clocking.client.employees.refresh_employee_report_filtered = function refresh_employee_report_filtered(events, from_date, to_date) {
+  return clojure.browser.dom.replace_node.call(null, goog.dom.getElementByClass("employee-report"), clocking.client.employees.employee_report.call(null, clocking.client.employees.filter_events_between.call(null, events, from_date, to_date)))
+};
+clocking.client.employees.handle_date_change = function handle_date_change() {
+  return clocking.client.employees.refresh_employee_report_filtered.call(null, clocking.client.employees.all_events, clocking.client.employees.from_datepicker.getDate(), clocking.client.employees.to_datepicker.getDate())
+};
+clocking.client.employees.start_page = function start_page() {
+  return dommy.template.node.call(null, cljs.core.PersistentVector.fromArray(["\ufdd0'div", cljs.core.ObjMap.fromObject(["\ufdd0'id"], {"\ufdd0'id":"employee-app"}), cljs.core.PersistentVector.fromArray(["\ufdd0'div", cljs.core.ObjMap.fromObject(["\ufdd0'class"], {"\ufdd0'class":"datepickers"}), cljs.core.PersistentVector.fromArray(["\ufdd0'div", cljs.core.ObjMap.fromObject(["\ufdd0'id", "\ufdd0'class"], {"\ufdd0'id":"from-datepicker", "\ufdd0'class":"datepicker"}), "From"], true), cljs.core.PersistentVector.fromArray(["\ufdd0'div", 
+  cljs.core.ObjMap.fromObject(["\ufdd0'id", "\ufdd0'class"], {"\ufdd0'id":"to-datepicker", "\ufdd0'class":"datepicker"}), "To"], true)], true), clocking.client.employees.employee_report.call(null, clocking.client.employees.all_events)], true))
+};
+clocking.client.employees.buildpage = function buildpage() {
+  console.log("Starting to build page.");
+  clojure.browser.dom.replace_node.call(null, goog.dom.getElement("employee-app"), clocking.client.employees.start_page.call(null));
+  clocking.client.employees.from_datepicker.render(goog.dom.getElement("from-datepicker"));
+  clocking.client.employees.to_datepicker.render(goog.dom.getElement("to-datepicker"));
+  goog.events.listen(clocking.client.employees.from_datepicker, goog.ui.DatePicker.Events.CHANGE, clocking.client.employees.handle_date_change);
+  return goog.events.listen(clocking.client.employees.to_datepicker, goog.ui.DatePicker.Events.CHANGE, clocking.client.employees.handle_date_change)
 };
 clocking.client.employees.get_events_from_server = function get_events_from_server() {
+  console.log("Getting events from server.");
   return fetch.remotes.remote_callback.call(null, "get-all-events", cljs.core.PersistentVector.fromArray([clocking.client.employees.userid], true), function(events) {
-    clocking.client.employees.all_events = events
+    console.log("Events returned");
+    clocking.client.employees.all_events = cljs.core.map.call(null, clocking.client.employees.convert_date_to_goog, events);
+    return clocking.client.employees.buildpage.call(null)
   })
 };
 clocking.client.employees.get_events_from_server.call(null);
-clocking.client.employees.populate_report.call(null, clocking.client.employees.all_events);
-clocking.client.employees.date_bigger_than = function date_bigger_than(event) {
-  return(new cljs.core.Keyword("\ufdd0'date")).call(null, event).getTime() < (new Date(2013, 11, 3)).getTime()
-};
-cljs.core.filter.call(null, clocking.client.employees.date_bigger_than, clocking.client.employees.all_events);
-(new cljs.core.Keyword("\ufdd0'date")).call(null, cljs.core.first.call(null, clocking.client.employees.all_events)).getTime();
-clocking.client.employees.buildpage.call(null);
