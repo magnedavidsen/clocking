@@ -39,15 +39,23 @@
 (def to-datepicker (create-datepicker (new goog.date.Date)))
 
 (defn minutes-between [clock-in clock-out]
-  (when (and clock-in clock-out) (.minBetween js/Date clock-in clock-out)))
+  (when (and clock-in clock-out)
+    (let [one-min (* 1000 60)]
+      (.round js/Math
+              (/ (- (.getTime clock-out) (.getTime clock-in)) one-min)))))
+
+(defn format-minutes [minutes]
+  (let [remainder (mod minutes 60)]
+    (let [hours (/ (- minutes remainder) 60)]
+         (str hours "h " remainder "m"))))
 
 (defn event-row [{:keys [date clock-in clock-out]}]
   (template/node
    [:tr
     [:td (.format date-formatter date)]
-    [:td (js/formatTime (str clock-in))]
-    [:td (js/formatTime (str clock-out))]
-    [:td (js/formatMinutes (minutes-between clock-in clock-out))]]))
+    [:td (.toLocaleTimeString clock-in)]
+    [:td (.toLocaleTimeString clock-out)]
+    [:td (format-minutes (minutes-between clock-in clock-out))]]))
 
 (defn sum-hours [events]
   (reduce + (map #(minutes-between (:clock-in %) (:clock-out %)) events)))
@@ -56,7 +64,7 @@
   (template/node
    [:div {:class "employee-report"}
     [:div (str "Showing hours from " (.format date-formatter (.getDate to-datepicker)) " to " (.format date-formatter (.getDate from-datepicker)) )]
-    [:div {:class "total-hours"} (str "Total hours: " (js/formatMinutes (sum-hours events)))]
+    [:div {:class "total-hours"} (str "Total hours: " (format-minutes (sum-hours events)))]
     [:table [:tr [:th "Date"] [:th "Clocked in"] [:th "Clocked out" ] [:th "Sum"]]
      (map event-row events)]]))
 
