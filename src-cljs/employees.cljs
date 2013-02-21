@@ -1,7 +1,10 @@
 (ns clocking.client.employees
   (:require [fetch.remotes :as remotes]
             [goog.dom :as googdom]
+            [goog.events :as events]
+            [goog.i18n.DateTimeFormat]
             [goog.ui.DatePicker]
+            [goog.ui.DatePicker.Events]
             [goog.date.Date]
             [clojure.browser.dom :as dom]
             [dommy.template :as template])
@@ -70,7 +73,7 @@
 
 (defn filter-events-between [events from-date to-date]
   (filter #(date-in-range (:date %) from-date to-date ) events))
-
+h
 (defn refresh-employee-report-filtered [events from-date to-date]
   (dom/replace-node (googdom/getElementByClass "employee-report") (employee-report (filter-events-between events from-date to-date)))
   )
@@ -92,8 +95,8 @@
   (dom/replace-node (googdom/getElement "employee-app") (start-page))
   (.render from-datepicker (googdom/getElement "from-datepicker"))
   (.render to-datepicker (googdom/getElement "to-datepicker"))
-  (js/goog.events.listen from-datepicker goog.ui.DatePicker.Events.CHANGE handle-date-change)
-  (js/goog.events.listen to-datepicker goog.ui.DatePicker.Events.CHANGE handle-date-change))
+  (events/listen from-datepicker goog.ui.DatePicker.Events.CHANGE handle-date-change)
+  (events/listen to-datepicker goog.ui.DatePicker.Events.CHANGE handle-date-change))
 
 ;;TODO is it ok to do def all-events here?
 (defn get-events-from-server []
