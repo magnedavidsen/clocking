@@ -55,9 +55,9 @@
 (defn event-row [{:keys [date clock-in clock-out]}]
   (template/node
    [:tr
-    [:td (.format date-formatter date)]
-    [:td (.toLocaleTimeString clock-in)]
-    [:td (.toLocaleTimeString clock-out)]
+    [:td (when-not (nil? date) (.format date-formatter  date))]
+    [:td (when-not (nil? clock-in) (.toLocaleTimeString clock-in))]
+    [:td (when-not (nil? clock-out) (.toLocaleTimeString clock-out))]
     [:td (format-minutes (minutes-between clock-in clock-out))]]))
 
 (defn sum-hours [events]

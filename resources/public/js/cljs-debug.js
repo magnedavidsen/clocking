@@ -32412,18 +32412,18 @@ clocking.client.employees.format_minutes = function format_minutes(minutes) {
   var hours = (minutes - remainder) / 60;
   return[cljs.core.str(hours), cljs.core.str("h "), cljs.core.str(remainder), cljs.core.str("m")].join("")
 };
-clocking.client.employees.event_row = function event_row(p__14525) {
-  var map__14527 = p__14525;
-  var map__14527__$1 = cljs.core.seq_QMARK_.call(null, map__14527) ? cljs.core.apply.call(null, cljs.core.hash_map, map__14527) : map__14527;
-  var clock_out = cljs.core._lookup.call(null, map__14527__$1, "\ufdd0'clock-out", null);
-  var clock_in = cljs.core._lookup.call(null, map__14527__$1, "\ufdd0'clock-in", null);
-  var date = cljs.core._lookup.call(null, map__14527__$1, "\ufdd0'date", null);
-  return dommy.template.node.call(null, cljs.core.PersistentVector.fromArray(["\ufdd0'tr", cljs.core.PersistentVector.fromArray(["\ufdd0'td", clocking.client.employees.date_formatter.format(date)], true), cljs.core.PersistentVector.fromArray(["\ufdd0'td", clock_in.toLocaleTimeString()], true), cljs.core.PersistentVector.fromArray(["\ufdd0'td", clock_out.toLocaleTimeString()], true), cljs.core.PersistentVector.fromArray(["\ufdd0'td", clocking.client.employees.format_minutes.call(null, clocking.client.employees.minutes_between.call(null, 
-  clock_in, clock_out))], true)], true))
+clocking.client.employees.event_row = function event_row(p__15007) {
+  var map__15009 = p__15007;
+  var map__15009__$1 = cljs.core.seq_QMARK_.call(null, map__15009) ? cljs.core.apply.call(null, cljs.core.hash_map, map__15009) : map__15009;
+  var clock_out = cljs.core._lookup.call(null, map__15009__$1, "\ufdd0'clock-out", null);
+  var clock_in = cljs.core._lookup.call(null, map__15009__$1, "\ufdd0'clock-in", null);
+  var date = cljs.core._lookup.call(null, map__15009__$1, "\ufdd0'date", null);
+  return dommy.template.node.call(null, cljs.core.PersistentVector.fromArray(["\ufdd0'tr", cljs.core.PersistentVector.fromArray(["\ufdd0'td", date == null ? null : clocking.client.employees.date_formatter.format(date)], true), cljs.core.PersistentVector.fromArray(["\ufdd0'td", clock_in == null ? null : clock_in.toLocaleTimeString()], true), cljs.core.PersistentVector.fromArray(["\ufdd0'td", clock_out == null ? null : clock_out.toLocaleTimeString()], true), cljs.core.PersistentVector.fromArray(["\ufdd0'td", 
+  clocking.client.employees.format_minutes.call(null, clocking.client.employees.minutes_between.call(null, clock_in, clock_out))], true)], true))
 };
 clocking.client.employees.sum_hours = function sum_hours(events) {
-  return cljs.core.reduce.call(null, cljs.core._PLUS_, cljs.core.map.call(null, function(p1__14524_SHARP_) {
-    return clocking.client.employees.minutes_between.call(null, (new cljs.core.Keyword("\ufdd0'clock-in")).call(null, p1__14524_SHARP_), (new cljs.core.Keyword("\ufdd0'clock-out")).call(null, p1__14524_SHARP_))
+  return cljs.core.reduce.call(null, cljs.core._PLUS_, cljs.core.map.call(null, function(p1__15006_SHARP_) {
+    return clocking.client.employees.minutes_between.call(null, (new cljs.core.Keyword("\ufdd0'clock-in")).call(null, p1__15006_SHARP_), (new cljs.core.Keyword("\ufdd0'clock-out")).call(null, p1__15006_SHARP_))
   }, events))
 };
 clocking.client.employees.employee_report = function employee_report(events) {
@@ -32432,8 +32432,8 @@ clocking.client.employees.employee_report = function employee_report(events) {
   "Clocked in"], true), cljs.core.PersistentVector.fromArray(["\ufdd0'th", "Clocked out"], true), cljs.core.PersistentVector.fromArray(["\ufdd0'th", "Sum"], true)], true), cljs.core.map.call(null, clocking.client.employees.event_row, events)], true)], true))
 };
 clocking.client.employees.filter_events_between = function filter_events_between(events, from_date, to_date) {
-  return cljs.core.filter.call(null, function(p1__14528_SHARP_) {
-    return clocking.client.employees.date_in_range.call(null, (new cljs.core.Keyword("\ufdd0'date")).call(null, p1__14528_SHARP_), from_date, to_date)
+  return cljs.core.filter.call(null, function(p1__15010_SHARP_) {
+    return clocking.client.employees.date_in_range.call(null, (new cljs.core.Keyword("\ufdd0'date")).call(null, p1__15010_SHARP_), from_date, to_date)
   }, events)
 };
 clocking.client.employees.refresh_employee_report_filtered = function refresh_employee_report_filtered(events, from_date, to_date) {
