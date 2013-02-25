@@ -47,7 +47,7 @@
       (.round js/Math
               (/ (- (.getTime clock-out) (.getTime clock-in)) one-min)))))
 
-(defn format-minutes [minutes]
+ (defn format-minutes [minutes]
   (let [remainder (mod minutes 60)]
     (let [hours (/ (- minutes remainder) 60)]
          (str hours "h " remainder "m"))))
@@ -66,7 +66,7 @@
 (defn employee-report [events]
   (template/node
    [:div {:class "employee-report"}
-    [:div (str "Showing hours from " (.format date-formatter (.getDate to-datepicker)) " to " (.format date-formatter (.getDate from-datepicker)) )]
+    [:div (str "Showing hours from " (.format date-formatter (.getDate from-datepicker)) " to " (.format date-formatter (.getDate to-datepicker)) )]
     [:div {:class "total-hours"} (str "Total hours: " (format-minutes (sum-hours events)))]
     [:table [:tr [:th "Date"] [:th "Clocked in"] [:th "Clocked out" ] [:th "Sum"]]
      (map event-row events)]]))

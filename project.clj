@@ -21,16 +21,18 @@
 
                                  {
 
-                                  :source-paths ["src-cljs"]
+                                  :source-paths ["src-cljs" "cljs-repl"]
                                   :compiler {
                                              :output-to "resources/public/js/cljs-debug.js"
                                              :optimizations :whitespace
                                              :pretty-print true}}
 
+
                                  {
 
                                   :source-paths ["src-cljs"]
                                   :compiler {
+                                             :exclude "src-cljs/repl.cljs"
                                              :output-to "resources/public/js/cljs.js"
                                              :optimizations :advanced
                                              :pretty-print false}}

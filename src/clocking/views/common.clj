@@ -18,3 +18,17 @@
               [:body {:class bodyclass}
                [:div#wrapper
                 content]]))
+
+(defpartial layout-cljs [bodyclass & content]
+            (html5
+              [:head
+               [:title "clocking - employee"]
+               (include-css "/css/reset.css")
+               [:link {:rel "stylesheet/less" :type "text/css" :href "/css/elements.less"}]
+               [:link {:rel "stylesheet/less" :type "text/css" :href "/css/default.less"}]
+               [:link {:rel "stylesheet/less" :type "text/css" :href "/css/icons.less"}]
+               (include-js "/js/statuscake.js")
+               (include-js "/js/less-1.3.0.min.js")]
+              [:body {:class bodyclass}
+               [:div#wrapper
+                content]]))
