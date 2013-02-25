@@ -10,7 +10,7 @@
             [dommy.template :as template])
   (:require-macros [fetch.macros :as fm]))
 
-(def userid js/window.employeeid)
+(def userid (js/parseInt (last (clojure.string/split js/document.URL #"/"))))
 
 (def date-formatter (new goog.i18n.DateTimeFormat "dd/MM/yyyy"))
 
@@ -62,6 +62,7 @@
 
 (defn sum-hours [events]
   (reduce + (map #(minutes-between (:clock-in %) (:clock-out %)) events)))
+
 
 (defn employee-report [events]
   (template/node
