@@ -108,4 +108,5 @@ h
              (def all-events (map convert-date-to-goog events))
              (buildpage)))
 
-(get-events-from-server)
+;;TODO find better way to start different apps
+(when (not (nil? (googdom/getElement "employee-app") )) (get-events-from-server))
