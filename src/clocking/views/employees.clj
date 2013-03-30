@@ -21,6 +21,12 @@
                (= "vectra" (cookie/get :passphrase))
              (resp/redirect "/login")))
 
+(pre-route "/_fetch" {}
+           (when-not
+               (= "vectra" (cookie/get :passphrase))
+             (resp/redirect "/login")))
+
+
 (defpartial cljs-env-aware []
   (if (= (System/getenv "ENVIRONMENT") "dev")
                      [:div
@@ -77,12 +83,13 @@
 
 ;todo, writer smarter
 (defn convert-date [event]
-  {:clock-in (time/to-date (:clock-in event)) :clock-out (time/to-date (:clock-out event)) :date (time/to-date (:date event))})
+  {:clock-in (time/to-date (:clock-in event)) :clock-out (time/to-date (:clock-out event)) :date (time/to-date (:date event)) :employee-id (:employee_id event)})
 
 (defremote get-all-events [employee-id]
   (map convert-date
               (events/get-all-events-for-employee employee-id)))
 
 (defremote get-all-incomplete []
-  (map convert-date
-       (events/incomplete-days-in-events (db/all-events))))
+  (flatten
+   (events/incomplete-days-in-events
+    (map #(get-all-events (:id %)) (db/list-all-employees)))))
