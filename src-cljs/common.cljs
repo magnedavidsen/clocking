@@ -9,7 +9,7 @@
 (defn convert-date-to-goog [event]
   (let [date (new goog.date.Date)]
     (.set date (:date event))
-    {:clock-in (:clock-in event) :clock-out (:clock-out event) :date date}))
+    {:clock-in (:clock-in event) :clock-out (:clock-out event) :date date :employee-id (:employee-id event)}))
 
 (defn minutes-between [clock-in clock-out]
   (when (and clock-in clock-out)
