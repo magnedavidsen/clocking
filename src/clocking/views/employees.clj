@@ -21,6 +21,13 @@
                (= "vectra" (cookie/get :passphrase))
              (resp/redirect "/login")))
 
+(defpartial cljs-env-aware []
+  (if (= (System/getenv "ENVIRONMENT") "dev")
+                     [:div
+                      [:script {:type "text/javascript" :src "/js/cljs-debug.js"}]
+                      [:script {:type "text/javascript"} "goog.require('clocking.client.repl')"]]
+                     [:script {:type "text/javascript" :src "/js/cljs.js"}]))
+
 (defpartial add-employee-form []
   (form-to {:autocomplete "off"} [:post "/admin/employees/add"]
            [:span {:class "label-input-row"}
@@ -50,6 +57,12 @@
    (add-employee-form)
    (employees-table (db/list-all-employees))))
 
+(defpage "/admin/incomplete" []
+  (common/layout-cljs "admin"
+                      [:h1 "Incomplete clockings"]
+                      [:div {:id "incomplete-app"}]
+                      (cljs-env-aware)))
+
 (defpage [:post "/admin/employees/add"] {:as employee}
   (db/create-employee (Integer/parseInt  (:employee-id employee)) (:employee-name employee))
   (render "/admin/employees"))
@@ -60,11 +73,7 @@
     (common/layout-cljs "admin"
                    [:h1 (:name (first  (db/get-employee id-int)))]
                    [:div {:id "employee-app"}]
-                   (if (= (System/getenv "ENVIRONMENT") "dev")
-                     (and
-                      [:script {:type "text/javascript" :src "/js/cljs-debug.js"}]
-                      [:script {:type "text/javascript"} "goog.require('clocking.client.repl')"])
-                     [:script {:type "text/javascript" :src "/js/cljs.js"}]))))
+                   (cljs-env-aware))))
 
 ;todo, writer smarter
 (defn convert-date [event]
@@ -73,3 +82,7 @@
 (defremote get-all-events [employee-id]
   (map convert-date
               (events/get-all-events-for-employee employee-id)))
+
+(defremote get-all-incomplete []
+  (map convert-date
+       (events/incomplete-days-in-events (db/all-events))))

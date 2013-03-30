@@ -51,6 +51,10 @@
   (when-not (nil? event)
     {:time (from-sql-date (:time event)) :type (:type event) :id (:id event) :employee_id (:employee_id event)}))
 
+(defn all-events []
+  (map convert-date
+       (select events)))
+
 (defn all-events [employee-id]
   (map convert-date
        (select events (where {:employee_id employee-id}))))
