@@ -38,6 +38,15 @@
 (def two-events-flattened
   {:employee_id 100, :date (from-sql-date #inst "2012-10-16T23:49:07.818-00:00"),  :clock-in (from-sql-date  #inst "2012-10-16T23:49:07.818-00:00"), :clock-out (from-sql-date #inst "2012-10-16T23:49:07.818-00:00")})
 
+(def list-of-flattened-events
+  [{:employee_id 100, :date (from-sql-date #inst "2012-10-16T23:49:07.818-00:00"), :clock-in (from-sql-date #inst  "2012-10-16T23:49:07.818-00:00")}
+   {:employee_id 100, :date (from-sql-date #inst "2012-10-16T23:49:07.818-00:00"),  :clock-in (from-sql-date  #inst "2012-10-16T23:49:07.818-00:00"), :clock-out (from-sql-date #inst "2012-10-16T23:49:07.818-00:00")}
+   {:employee_id 100, :date (from-sql-date #inst "2012-10-16T23:49:07.818-00:00"), :clock-out (from-sql-date #inst  "2012-10-16T23:49:07.818-00:00")}])
+
+(def incomplete-events
+  [{:employee_id 100, :date (from-sql-date #inst "2012-10-16T23:49:07.818-00:00"), :clock-in (from-sql-date #inst  "2012-10-16T23:49:07.818-00:00")}
+   {:employee_id 100, :date (from-sql-date #inst "2012-10-16T23:49:07.818-00:00"), :clock-out (from-sql-date #inst  "2012-10-16T23:49:07.818-00:00")}])
+
 (deftest events-get-paired-correctly
   (is (= wanted-format
          (events/pair-clockins-and-clockouts event-list []))))
@@ -73,3 +82,7 @@
 (deftest proper-pair-returns-false-2
   (is (not
        (events/proper-pair? (first event-list) (second event-list)))))
+
+(deftest incomplete-days-returns-correctly
+  (is (= incomplete-events
+         (events/incomplete-days-in-events list-of-flattened-events))))

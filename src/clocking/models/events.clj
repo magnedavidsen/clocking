@@ -38,3 +38,6 @@
 (defn time-between-timestamps [timestamp-one timestamp-two]
   (if (not-any? nil? [timestamp-one timestamp-two])
     (time/in-minutes (time/interval timestamp-one timestamp-two))))
+
+(defn incomplete-days-in-events [events]
+  (filter #(or (nil? (:clock-out %)) (nil? (:clock-in %))) events))
