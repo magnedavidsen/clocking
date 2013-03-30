@@ -59,13 +59,12 @@
   (let [id-int (Integer/parseInt id)]
     (common/layout-cljs "admin"
                    [:h1 (:name (first  (db/get-employee id-int)))]
-                   [:script {:type "text/javascript"} (str "window.employeeid = " id)]
                    [:div {:id "employee-app"}]
-                   [:script {:type "text/javascript" :src "/js/cljs.js"}]
-
-                   (when (= (System/getenv "ENVIRONMENT") "dev")
-                     [:script {:type "text/javascript"} "goog.require('clocking.client.repl')"]))))
-
+                   (if (= (System/getenv "ENVIRONMENT") "dev")
+                     (and
+                      [:script {:type "text/javascript" :src "/js/cljs-debug.js"}]
+                      [:script {:type "text/javascript"} "goog.require('clocking.client.repl')"])
+                     [:script {:type "text/javascript" :src "/js/cljs.js"}]))))
 
 ;todo, writer smarter
 (defn convert-date [event]
