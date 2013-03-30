@@ -1,8 +1,8 @@
 (ns clocking.client.employees
-  (:require [fetch.remotes :as remotes]
+  (:require [clocking.client.common :as common]
+            [fetch.remotes :as remotes]
             [goog.dom :as googdom]
             [goog.events :as events]
-            [goog.i18n.DateTimeFormat]
             [goog.ui.DatePicker]
             [goog.ui.DatePicker.Events]
             [goog.date.Date]
@@ -12,19 +12,10 @@
 
 (def userid (js/parseInt (last (clojure.string/split js/document.URL #"/"))))
 
-(def date-formatter (new goog.i18n.DateTimeFormat "dd/MM/yyyy"))
-(def time-formatter (new goog.i18n.DateTimeFormat "HH:mm"))
-
 (defn date-in-range [date from-date to-date]
   (and
    (>= 0 (goog.date.Date.compare from-date date))
    (>= 0 (goog.date.Date.compare date to-date))))
-
-;;TODO generalize to fix everything with a :date-field
-(defn convert-date-to-goog [event]
-  (let [date (new goog.date.Date)]
-    (.set date (:date event))
-    {:clock-in (:clock-in event) :clock-out (:clock-out event) :date date}))
 
 (defn create-datepicker [date]
   (let [picker (new goog.ui.DatePicker)]
@@ -42,34 +33,19 @@
     (create-datepicker date)))
 (def to-datepicker (create-datepicker (new goog.date.Date)))
 
-(defn minutes-between [clock-in clock-out]
-  (when (and clock-in clock-out)
-    (let [one-min (* 1000 60)]
-      (.round js/Math
-              (/ (- (.getTime clock-out) (.getTime clock-in)) one-min)))))
-
- (defn format-minutes [minutes]
-  (let [remainder (mod minutes 60)]
-    (let [hours (/ (- minutes remainder) 60)]
-         (str hours "h " remainder "m"))))
-
 (defn event-row [{:keys [date clock-in clock-out]}]
   (template/node
    [:tr
-    [:td (when-not (nil? date) (.format date-formatter date))]
-    [:td (when-not (nil? clock-in) (.format time-formatter clock-in))]
-    [:td (when-not (nil? clock-out) (.format time-formatter clock-out))]
-    [:td (format-minutes (minutes-between clock-in clock-out))]]))
-
-(defn sum-hours [events]
-  (reduce + (map #(minutes-between (:clock-in %) (:clock-out %)) events)))
-
+    [:td (when-not (nil? date) (.format common/date-formatter date))]
+    [:td (when-not (nil? clock-in) (.format common/time-formatter clock-in))]
+    [:td (when-not (nil? clock-out) (.format common/time-formatter clock-out))]
+    [:td (common/format-minutes (common/minutes-between clock-in clock-out))]]))
 
 (defn employee-report [events]
   (template/node
    [:div {:class "employee-report"}
-    [:div (str "Showing hours from " (.format date-formatter (.getDate from-datepicker)) " to " (.format date-formatter (.getDate to-datepicker)) )]
-    [:div {:class "total-hours"} (str "Total hours: " (format-minutes (sum-hours events)))]
+    [:div (str "Showing hours from " (.format common/date-formatter (.getDate from-datepicker)) " to " (.format common/date-formatter (.getDate to-datepicker)) )]
+    [:div {:class "total-hours"} (str "Total hours: " (common/format-minutes (common/sum-hours events)))]
     [:table [:tr [:th "Date"] [:th "Clocked in"] [:th "Clocked out" ] [:th "Sum"]]
      (map event-row events)]]))
 
@@ -105,7 +81,7 @@ h
   (.log js/console "Getting events from server.")
   (fm/letrem [events (get-all-events userid)]
              (.log js/console "Events returned")
-             (def all-events (map convert-date-to-goog events))
+             (def all-events (map common/convert-date-to-goog events))
              (buildpage)))
 
 ;;TODO find better way to start different apps
