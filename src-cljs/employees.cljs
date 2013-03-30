@@ -13,6 +13,7 @@
 (def userid (js/parseInt (last (clojure.string/split js/document.URL #"/"))))
 
 (def date-formatter (new goog.i18n.DateTimeFormat "dd/MM/yyyy"))
+(def time-formatter (new goog.i18n.DateTimeFormat "HH:mm"))
 
 (defn date-in-range [date from-date to-date]
   (and
@@ -55,9 +56,9 @@
 (defn event-row [{:keys [date clock-in clock-out]}]
   (template/node
    [:tr
-    [:td (when-not (nil? date) (.format date-formatter  date))]
-    [:td (when-not (nil? clock-in) (.toLocaleTimeString clock-in))]
-    [:td (when-not (nil? clock-out) (.toLocaleTimeString clock-out))]
+    [:td (when-not (nil? date) (.format date-formatter date))]
+    [:td (when-not (nil? clock-in) (.format time-formatter clock-in))]
+    [:td (when-not (nil? clock-out) (.format time-formatter clock-out))]
     [:td (format-minutes (minutes-between clock-in clock-out))]]))
 
 (defn sum-hours [events]
