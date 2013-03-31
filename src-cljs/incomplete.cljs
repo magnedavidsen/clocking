@@ -15,12 +15,17 @@
   (.log js/console (+ "Sending object to backend: " (str event)))
   (fm/remote (save-event event) [result] (js/alert result)))
 
+(defn new-datetime [{:keys [year month date hours minutes]}]
+  (let [datetime (new goog.date.DateTime year month date hours minutes)]
+    (.toUTCIsoString datetime false true)))
+
 (defn new-event-component [{:keys [type employee-id date]}]
   (let [submit-button (template/node [:button {:class "submit"}])]
     (let [input-field (template/node [:input])]
       (defn click-handler []
         (let [time-array (clojure.string/split (.-value input-field) #":")]
-          (save-new-event {:type type :employee-id employee-id :year (.getYear date) :month (+ 1  (.getMonth date)) :date (.getDate date) :hours (js/parseInt (first time-array)) :minutes (js/parseInt (second time-array))})))
+          (save-new-event {:type type :employee-id employee-id
+                           :time  (new-datetime {:year (.getYear date) :month (.getMonth date) :date (.getDate date) :hours (js/parseInt (first time-array)) :minutes (js/parseInt (second time-array))})})))
       (events/listen submit-button goog.events.EventType.CLICK click-handler)
       (template/node
        [:div

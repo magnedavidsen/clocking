@@ -9,6 +9,7 @@
             [noir.fetch.remotes :refer :all]
             [clj-time.coerce :as time]
             [clj-time.core :as time-core]
+            [clj-time.format :as format]
             )
   (:use [noir.core]
         [hiccup.form]
@@ -91,12 +92,15 @@
               (events/get-all-events-for-employee employee-id)))
 
 (defremote get-all-incomplete []
+
+  (defn get-all-events-per-employee []
+    (map #(get-all-events (:id %)) (db/list-all-employees)))
+
   (flatten
-   (events/incomplete-days-in-events
-    (map #(get-all-events (:id %)) (db/list-all-employees)))))
+   (map events/incomplete-days-in-events (get-all-events-per-employee))))
 
 (defremote save-event [event]
-  (let [time (time-core/date-time (:year event) (:month event) (:date event) (:hours event) (:minutes event))]
-    (println time)
+  (let [time (time/from-string (:time event))]
+    (println (time/to-timestamp time))
     (db/save-event {:type (:type event) :employee-id (:employee-id event) :time (time/to-timestamp time)}))
   "OK")
