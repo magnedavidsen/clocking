@@ -53,7 +53,8 @@
 
 (defn all-events [employee-id]
   (map convert-date
-       (select events (where {:employee_id employee-id}))))
+       (select events
+               (where {:employee_id employee-id}) (order :time) )))
 
 (defn most-recent-event [employee_id]
   (convert-date (first
@@ -62,6 +63,10 @@
 (defn create-event [type, employee_id]
   (insert events
           (values {:type type, :employee_id employee_id})))
+
+(defn save-event [{:keys [type, employee-id, time]}]
+  (insert events
+          (values {:type type, :employee_id employee-id, :time time })))
 
 (defn update-event [id, type]
    (update events

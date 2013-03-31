@@ -4,15 +4,27 @@
             [goog.dom :as googdom]
             [goog.events :as events]
             [goog.i18n.DateTimeFormat]
+            [goog.date.DateTime]
+            [goog.date.Date]
             [clojure.browser.dom :as dom]
             [dommy.template :as template]
             )
   (:require-macros [fetch.macros :as fm]))
 
+(defn save-new-event [event]
+  (.log js/console (+ "Sending object to backend: " (str event)))
+  (fm/remote (save-event event) [result] (js/alert result)))
+
 (defn new-event-component [{:keys [type employee-id date]}]
-  (template/node
-   [:div
-    [:input ] [:button {:class "submit"}]]))
+  (let [submit-button (template/node [:button {:class "submit"}])]
+    (let [input-field (template/node [:input])]
+      (defn click-handler []
+        (let [time-array (clojure.string/split (.-value input-field) #":")]
+          (save-new-event {:type type :employee-id employee-id :year (.getYear date) :month (+ 1  (.getMonth date)) :date (.getDate date) :hours (js/parseInt (first time-array)) :minutes (js/parseInt (second time-array))})))
+      (events/listen submit-button goog.events.EventType.CLICK click-handler)
+      (template/node
+       [:div
+        input-field submit-button]))))
 
 (defn event-row [{:keys [employee-id date clock-in clock-out]}]
   (template/node
