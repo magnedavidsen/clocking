@@ -59,10 +59,6 @@
   (is (= one-event-flattened
          (events/flatten-two-events one-event))))
 
-(deftest time-between-timestamps-works-correctly
-  (is (= 0
-         (events/time-between-timestamps (:clock-in two-events-flattened) (:clock-out two-events-flattened)))))
-
 (deftest same-day-returns-true
   (is
    (events/same-day? (first two-events) (second two-events))))
