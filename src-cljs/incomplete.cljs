@@ -11,16 +11,7 @@
             )
   (:require-macros [fetch.macros :as fm]))
 
-(defn valid-time? [time-array]
-  "Expects first to be hours, and second to be minutes"
-  (.log js/console time-array)
-  (when (nil? (first time-array)) false)
-  (when (nil? (second time-array)) false)
-  (let [hours (js/parseInt (first time-array)) minutes (js/parseInt (second time-array))]
-    (and (<= 0 hours 23) (<= 0 minutes 59))))
-
 (defn save-new-event [event]
-  (validate-time ())
   (.log js/console (+ "Sending object to backend: " (str event)))
   (fm/remote (save-event event) [result] (js/alert result)))
 
@@ -33,11 +24,8 @@
     (let [input-field (template/node [:input])]
       (defn click-handler []
         (let [time-array (clojure.string/split (.-value input-field) #":")]
-          (if (valid-time? time-array)
-            (save-new-event {:type type :employee-id employee-id
-                             :time  (new-datetime {:year (.getYear date) :month (.getMonth date) :date (.getDate date) :hours (js/parseInt (first time-array)) :minutes (js/parseInt (second time-array))})})
-            (js/alert "Time is not in the right format (HH:mm)")
-            )))
+          (save-new-event {:type type :employee-id employee-id
+                           :time  (new-datetime {:year (.getYear date) :month (.getMonth date) :date (.getDate date) :hours (js/parseInt (first time-array)) :minutes (js/parseInt (second time-array))})})))
       (events/listen submit-button goog.events.EventType.CLICK click-handler)
       (template/node
        [:div
