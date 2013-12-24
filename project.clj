@@ -3,7 +3,7 @@
             :min-lein-version "2.0.0"
 
 
-            :dependencies [[org.clojure/clojure "1.4.0"]
+            :dependencies [[org.clojure/clojure "1.5.1"]
                            [noir "1.3.0-beta3" :exclusions [org.clojure/clojure]]
                            [korma "0.3.0-beta9"]
                            [postgresql "9.1-901-1.jdbc4"]
@@ -11,7 +11,9 @@
                            [clj-time "0.4.4"]
                            [cheshire "5.0.1"]
                            [fetch "0.1.0-alpha2"]
-                           [prismatic/dommy "0.0.1"]]
+                           [prismatic/dommy "0.0.1"]
+                           [lein-light-nrepl "0.0.9"]]
+            :repl-options {:nrepl-middleware [lighttable.nrepl.handler/lighttable-ops]}
             :dev-dependencies [[org.clojure/java.jdbc "0.1.1"]
                                [postgresql "9.1-901-1.jdbc4"]]
             :plugins [[lein-cljsbuild "0.3.0"]]
