@@ -6,9 +6,10 @@
             [noir.cookies :as cookie]
             [noir.response :as resp])
   (:use noir.core
+        compojure.core
         hiccup.form))
 
-;;TODO let passphrase be property
+;;TODO security needs to be reimplemented
 (pre-route [:get ["/:path" :path #"(?!login|logout)*"]]  {}
            (when-not
                (or
@@ -16,7 +17,7 @@
                 (= "vectra" (cookie/get :passphrase)))
              (resp/redirect "/login")))
 
-(defpage "/" []
+(defn index-page []
   (common/layout "index"
                  [:div {:class "form"}
                   (form-to {:autocomplete "off"} [:post "/clockin"]
@@ -29,7 +30,8 @@
                            (submit-button {:class "clock-out"} "clock out"))
                   [:p {:class "help-text"}]]))
 
-(defpage [:post "/clockin"] {:keys [employee-id]}
+(defn clockin-page [employee-id]
+  (println "test")
   (if
       (empty? (db/get-employee (Integer/parseInt employee-id)))
     (do
@@ -45,40 +47,46 @@
        [:p employee-id  " has been clocked in."]
        [:meta {:http-equiv "refresh" :content "2;url=/"}]))))
 
-(defpage [:post "/clockout"] {:keys [hidden-employee-id]}
+(defn clockout-page [employee-id]
   (if
-      (empty? (db/get-employee (Integer/parseInt hidden-employee-id)))
+      (empty? (db/get-employee (Integer/parseInt employee-id)))
     (do
-      (println "Someone tried clocking out with ID: " hidden-employee-id)
+      (println "Someone tried clocking out with ID: " employee-id)
       (common/layout
        "index"
-       [:p hidden-employee-id " is not a registered user."]
+       [:p employee-id " is not a registered user."]
        [:meta {:http-equiv "refresh" :content "2;url=/"}]))
     (do
-      (db/create-event "clock-out" (Integer/parseInt hidden-employee-id))
+      (db/create-event "clock-out" (Integer/parseInt employee-id))
       (common/layout
        "index"
-       [:p hidden-employee-id " has been clocked out."]
+       [:p employee-id " has been clocked out."]
        [:meta {:http-equiv "refresh" :content "2;url=/"}]))))
 
-(defpage "/login" []
+(defn login-page []
   (common/layout "index"
                  (form-to {:autocomplete "off"} [:post "/login"]
                           [:div {:class "label-input-row"}
                            (text-field {:class "passphrase" :size "10" :maxlength "20"} "passphrase")]
                           (submit-button {:class "log-in"} "log in"))))
 
-(defpage [:post "/login"] {:keys [passphrase]}
+(defn login [passphrase]
   (cookie/put! :passphrase passphrase)
   (if (= "vectra" passphrase)
     (resp/redirect "/admin/employees")
     (resp/redirect "/")))
 
-(defpage "/logout" []
+(defn logout []
   (cookie/put! :passphrase "")
   (resp/redirect "/"))
 
-
-
+(defroutes handler
+  (GET "/" [] (index-page))
+  (GET "/login" [] (login-page))
+  (POST "/login" {params :params} (login (params :passphrase)))
+  (GET "/logout"[] (logout))
+  (POST "/clockin" {params :params} (clockin-page (params :employee-id)))
+  (POST "/clockout" {params :params} (clockout-page (params :hidden-employee-id)))
+  )
 
 

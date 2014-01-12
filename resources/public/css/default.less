@@ -2,6 +2,7 @@
 @import "datepicker.less";
 
 @background: #FFF1DF;
+@light-background: #EEEEEE;
 @th-background: #9E8668;
 
 .box-shadow (@x: 0, @y: 0, @blur: 6px, @color: #949598) {
@@ -31,11 +32,19 @@ body {
     }
 }
 
+button{
+
+
+
+
+}
+
 input {
 		border: none;
 		font-family: "Helvetica Neue";
-		outline: none;	
-	&.employee-id{
+		outline: none;
+
+  &.employee-id{
 		width: 2.1em;
 	}
 
@@ -45,7 +54,15 @@ input {
 		background-color: transparent;
 		padding-left: 0.15em;
 		color: #333;
-		
+
+      &.incomplete{
+      padding-left: 0em;
+      height: 1.1em;
+      font-size: 1.0em;
+      width: 2.7em;
+      background-color: @light-background;
+	}
+
 	}
 	&[type="submit"]{
 		-webkit-appearance: push-button;
@@ -69,7 +86,7 @@ input {
 			}
 		}
 		&.clock-out{
-			.gradient(#C32219, #C32219, #E32D22 );	
+			.gradient(#C32219, #C32219, #E32D22 );
 			&:hover{
 				.gradient(#E32D22, #E32D22, #E95047);
 				.box-shadow(1px, 1px);
@@ -81,7 +98,7 @@ input {
 			margin-bottom: 2.5em;
 		}
 	}
-}	
+}
 
 .label-input-row{
 	margin-top: 0.5em;
@@ -123,7 +140,7 @@ td{
 	border-bottom: 1px solid black;
 }
 div.form{
-	
+
 	float: left;
 	>form{
 		width: 8em;
@@ -132,7 +149,7 @@ div.form{
 
 
 div.datepickers{
-	
+
 	margin-bottom: 10px;
 	overflow: hidden;
 	>div{

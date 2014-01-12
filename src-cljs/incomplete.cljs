@@ -1,6 +1,5 @@
 (ns clocking.client.incomplete
   (:require [clocking.client.common :as common]
-            [fetch.remotes :as remotes]
             [goog.dom :as googdom]
             [goog.events :as events]
             [goog.i18n.DateTimeFormat]
@@ -8,24 +7,35 @@
             [goog.date.Date]
             [clojure.browser.dom :as dom]
             [dommy.template :as template]
-            )
-  (:require-macros [fetch.macros :as fm]))
+            [ajax.core :refer [GET POST]]
+            ))
+
+(defn event-saved [response]
+  (get-events-from-server))
+
+(def my_regex #"\d{2}:\d{2}")
 
 (defn save-new-event [event]
   (.log js/console (+ "Sending object to backend: " (str event)))
-  (fm/remote (save-event event) [result] (js/alert result)))
+  (POST "/api/event"
+        {:params event
+         :handler event-saved
+         :error-handler error-handler}))
 
 (defn new-datetime [{:keys [year month date hours minutes]}]
   (let [datetime (new goog.date.DateTime year month date hours minutes)]
     (.toUTCIsoString datetime false true)))
 
 (defn new-event-component [{:keys [type employee-id date]}]
-  (let [submit-button (template/node [:button {:class "submit"}])]
-    (let [input-field (template/node [:input])]
+  (let [submit-button (template/node [:button {:class "submit"} "Save"])]
+    (let [input-field (template/node [:input {:type "text" :class "incomplete" :maxlength "5" :pattern "[0-9]"}])]
       (defn click-handler []
-        (let [time-array (clojure.string/split (.-value input-field) #":")]
-          (save-new-event {:type type :employee-id employee-id
-                           :time  (new-datetime {:year (.getYear date) :month (.getMonth date) :date (.getDate date) :hours (js/parseInt (first time-array)) :minutes (js/parseInt (second time-array))})})))
+        (if (.test my_regex (.-value input-field))
+          (let [time-array (clojure.string/split (.-value input-field) #":")]
+            (save-new-event {:type type :employee-id employee-id
+                           :time  (new-datetime {:year (.getYear date) :month (.getMonth date) :date (.getDate date) :hours (js/parseInt (first time-array)) :minutes (js/parseInt (second time-array))})}))
+          (js/alert (str "Wrong format: " (.-value input-field)))
+        ))
       (events/listen submit-button goog.events.EventType.CLICK click-handler)
       (template/node
        [:div
@@ -58,13 +68,19 @@
   (.log js/console "Starting to build page.")
   (dom/replace-node (googdom/getElement "incomplete-app") (start-page)))
 
+(defn set-events [events]
+  (.log js/console (str "Events: " events))
+  (def all-events (map common/convert-date-to-goog events))
+  (.log js/console "Events returned")
+  (buildpage))
+
 ;;TODO is it ok to do def all-events here?
 (defn get-events-from-server []
   (.log js/console "Getting events from server.")
-  (fm/letrem [events (get-all-incomplete)]
-             (.log js/console "Events returned")
-             (def all-events (map common/convert-date-to-goog events))
-             (buildpage)))
+  (GET "/api/incomplete"
+       {:handler set-events
+        :error-handler error-handler}
+       ))
 
 ;;TODO find better way to start different apps
 (when (not (nil? (googdom/getElement "incomplete-app") )) (get-events-from-server))

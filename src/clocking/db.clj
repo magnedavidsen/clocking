@@ -65,6 +65,7 @@
           (values {:type type, :employee_id employee_id})))
 
 (defn save-event [{:keys [type, employee-id, time]}]
+  ()
   (insert events
           (values {:type type, :employee_id employee-id, :time time })))
 

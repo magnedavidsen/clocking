@@ -1,20 +1,21 @@
 function formatDate(datestring, showRelativeDate){
-	console.log(datestring);
-	var date = new Date(datestring);
-	var weekday = date.toLocaleDateString().split(",")[0];
-	var month = date.toLocaleDateString().split(",")[1].split(" ")[1].toLowerCase();
-	var monthnumber = date.getMonth() + 1;
 
-	if(Date.isToday(date) && showRelativeDate){
+  console.log(datestring);
+	var d = new Date(datestring);
+  console.log(date);
+	var month = d.getMonth() + 1;
+	var date = d.getDate();
+  var year = d.getFullYear()
+
+
+	if(Date.isToday(d) && showRelativeDate){
 		return "Today";
-	} else if(Date.isYesterday(date) && showRelativeDate){
+	} else if(Date.isYesterday(d) && showRelativeDate){
 		return "Yesterday";
-	} else if(Date.isLessThanWeekAgo(date) && showRelativeDate){
-		return weekday;
-	} else if(Date.isThisYear(date)){
-		return date.getDate() + "/" + monthnumber ;
-	}else{
-		return date.getDate() + "/" + monthnumber + "/" + date.getFullYear();
+	} else if(Date.isThisYear(d)){
+		return d.getDate() + "/" + month ;
+  }else{
+		return d.getDate() + "/" + month + "/" + d.getFullYear();
 	}
 }
 
@@ -30,7 +31,7 @@ function formatTimestamp(datestring){
 	}
 }
 
-function formatMinutes(minutes){	
+function formatMinutes(minutes){
 	var newMinutes = minutes % 60;
 	var hours = (minutes - newMinutes)/60;
 	return hours + "h " + newMinutes + "m";
@@ -69,13 +70,13 @@ $(document).ready(function(){
 	    if (event.keyCode == 10 || event.keyCode == 13){
 	    	event.preventDefault();
 	    }
-	        
+
 	    //if 'i' is pressed, clock in
 	    if (event.keyCode == 105){
 	    	$('.clock-in').click();
 	    }
-	    
-	    //if 'o' is pressed, clock out	
+
+	    //if 'o' is pressed, clock out
 	    if (event.keyCode == 111){
 	    	setHiddenField();
 	    	$('.clock-out').click();
@@ -85,7 +86,7 @@ $(document).ready(function(){
 	    	$('.help-text').html("(Press <b>'I</b> to clock in, <b>'O'</b> to clock out)");
 	    }
 
-    	
+
   });
  });
 

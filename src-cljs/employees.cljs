@@ -1,14 +1,15 @@
 (ns clocking.client.employees
   (:require [clocking.client.common :as common]
-            [fetch.remotes :as remotes]
+               [clojure.string :as string]
+               [clojure.set :as set]
             [goog.dom :as googdom]
             [goog.events :as events]
             [goog.ui.DatePicker]
             [goog.ui.DatePicker.Events]
             [goog.date.Date]
             [clojure.browser.dom :as dom]
-            [dommy.template :as template])
-  (:require-macros [fetch.macros :as fm]))
+            [dommy.template :as template]
+            [ajax.core :refer [GET POST]]))
 
 (def userid (js/parseInt (last (clojure.string/split js/document.URL #"/"))))
 
@@ -50,8 +51,8 @@
      (map event-row events)]]))
 
 (defn filter-events-between [events from-date to-date]
-  (filter #(date-in-range (:date %) from-date to-date ) events))
-h
+  todo reimplement(filter #(date-in-range (:date %) from-date to-date ) events))
+
 (defn refresh-employee-report-filtered [events from-date to-date]
   (dom/replace-node (googdom/getElementByClass "employee-report") (employee-report (filter-events-between events from-date to-date)))
   )
@@ -76,13 +77,19 @@ h
   (events/listen from-datepicker goog.ui.DatePicker.Events.CHANGE handle-date-change)
   (events/listen to-datepicker goog.ui.DatePicker.Events.CHANGE handle-date-change))
 
+(defn set-events [events]
+  (.log js/console (str "Events: " events))
+  (def all-events events)
+
+  (buildpage))
+
 ;;TODO is it ok to do def all-events here?
 (defn get-events-from-server []
   (.log js/console "Getting events from server.")
-  (fm/letrem [events (get-all-events userid)]
-             (.log js/console "Events returned")
-             (def all-events (map common/convert-date-to-goog events))
-             (buildpage)))
+  (GET (str "/api/event/" userid)
+       {:handler set-events
+        :error-handler error-handler}
+       ))
 
 ;;TODO find better way to start different apps
 (when (not (nil? (googdom/getElement "employee-app") )) (get-events-from-server))

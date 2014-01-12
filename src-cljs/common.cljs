@@ -24,3 +24,6 @@
 
 (defn sum-hours [events]
   (reduce + (map #(minutes-between (:clock-in %) (:clock-out %)) events)))
+
+(defn error-handler [{:keys [status status-text]}]
+  (.log js/console (str "something bad happened: " status " " status-text)))
