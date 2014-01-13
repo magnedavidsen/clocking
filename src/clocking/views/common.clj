@@ -1,8 +1,7 @@
 (ns clocking.views.common
-  (:use [noir.core :only [defpartial]]
-        [hiccup.page :only [include-css include-js html5]]))
+  (:use [hiccup.page :only [include-css include-js html5]]))
 
-(defpartial layout [bodyclass & content]
+(defn layout [bodyclass & content]
             (html5
               [:head
                [:title "clocking"]
@@ -19,7 +18,7 @@
                [:div#wrapper
                 content]]))
 
-(defpartial layout-cljs [bodyclass & content]
+(defn layout-cljs [bodyclass & content]
             (html5
               [:head
                [:title "clocking - employee"]

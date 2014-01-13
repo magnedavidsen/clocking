@@ -5,17 +5,16 @@
             [clocking.db :as db]
             [noir.cookies :as cookie]
             [noir.response :as resp])
-  (:use noir.core
-        compojure.core
+  (:use compojure.core
         hiccup.form))
 
 ;;TODO security needs to be reimplemented
-(pre-route [:get ["/:path" :path #"(?!login|logout)*"]]  {}
-           (when-not
-               (or
-                (= "stemplingsur" (cookie/get :passphrase))
-                (= "vectra" (cookie/get :passphrase)))
-             (resp/redirect "/login")))
+;;(pre-route [:get ["/:path" :path #"(?!login|logout)*"]]  {}
+;;          (when-not
+;;               (or
+;;                (= "stemplingsur" (cookie/get :passphrase))
+;;                (= "vectra" (cookie/get :passphrase)))
+;;             (resp/redirect "/login")))
 
 (defn index-page []
   (common/layout "index"

@@ -13,15 +13,15 @@
 
 
 ;;TODO let passphrase be property
-(pre-route "/admin/*" {}
-           (when-not
-               (= "vectra" (cookie/get :passphrase))
-             (resp/redirect "/login")))
-
-(pre-route "/_fetch" {}
-           (when-not
-               (= "vectra" (cookie/get :passphrase))
-             (resp/redirect "/login")))
+;;(pre-route "/admin/*" {}
+;;           (when-not
+;;               (= "vectra" (cookie/get :passphrase))
+;;             (resp/redirect "/login")))
+;;
+;;(pre-route "/_fetch" {}
+;;           (when-not
+;;               (= "vectra" (cookie/get :passphrase))
+;;             (resp/redirect "/login")))
 
 
 (defn cljs-env-aware []
