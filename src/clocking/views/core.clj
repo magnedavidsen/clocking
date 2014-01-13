@@ -1,7 +1,5 @@
 (ns clocking.views.core
   (:require [clocking.views.common :as common]
-            [noir.content.getting-started]
-            [noir.validation :as vali]
             [clocking.db :as db]
             [noir.cookies :as cookie]
             [noir.response :as resp])
