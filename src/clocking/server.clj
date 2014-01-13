@@ -28,5 +28,5 @@
 (defn run-server [port]
   (defonce server (run-jetty #'app {:port port :join? false})))
 
-(defn -main [& port]
+(defn -main [port]
   (run-server (if (nil? port) 8080 (Integer/parseInt port))))
