@@ -15,3 +15,4 @@ out/
 repl/
 .#*
 war/
+src/clocking/scratch.clj
