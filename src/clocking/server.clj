@@ -3,7 +3,8 @@
         [ring.adapter.jetty :only (run-jetty)]
         [ring.middleware.reload :only (wrap-reload)]
         [ring.middleware.edn :only (wrap-edn-params)]
-        [hiccup.middleware :only (wrap-base-url)])
+        [hiccup.middleware :only (wrap-base-url)]
+        [clocking.middleware :only (wrap-request-logging)])
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
             clocking.views.core
@@ -22,6 +23,7 @@
   (-> (handler/site main-routes)
       (wrap-base-url)
       (wrap-edn-params)
+      (wrap-request-logging)
       (wrap-reload '(clocking.server))))
 
 ;; convenience-method for repl use etc
