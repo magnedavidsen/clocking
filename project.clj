@@ -14,7 +14,10 @@
                            [cljs-ajax "0.2.3"]
                            [fogus/ring-edn "0.2.0"]
                            [org.clojure/clojurescript "0.0-2138"]
-                           [lein-light-nrepl "0.0.9"]]
+                           [lein-light-nrepl "0.0.9"]
+                           [com.cemerick/friend "0.2.0"]
+                           [ring/ring-core "1.2.1"]
+                           ]
             :repl-options {:nrepl-middleware [lighttable.nrepl.handler/lighttable-ops]}
             :dev-dependencies [[org.clojure/java.jdbc "0.1.1"]
                                [postgresql "9.1-901-1.jdbc4"]]

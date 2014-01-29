@@ -16,3 +16,4 @@ repl/
 .#*
 war/
 src/clocking/scratch.clj
+src/clocking/scratchpad.clj
