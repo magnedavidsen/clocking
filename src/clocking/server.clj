@@ -17,18 +17,18 @@
             [cemerick.friend.credentials :refer (hash-bcrypt bcrypt-credential-fn)]
             [cemerick.friend.workflows :refer (interactive-form)]))
 
-(def users {"admin" {:username (hash-bcrypt "admin")
-                     :password (hash-bcrypt "vectra")
+(def users {"admin" {:username "admin"
+                     :password (hash-bcrypt (or (System/getenv "ADMIN_PASS") "admin"))
                      :roles #{::admin}}
             "user" {:username "user"
-                    :password (hash-bcrypt "stemplingsur")
+                    :password (hash-bcrypt (or (System/getenv "USER_PASS") "user"))
                     :roles #{::user}}})
 
 (derive ::admin ::user)
 
 (defroutes user-routes
-  clocking.views.core/handler
-  clocking.views.api/handler)
+  clocking.views.api/handler
+  clocking.views.core/handler)
 
 (defroutes main-routes
   (context "/" request
@@ -36,6 +36,7 @@
 
   (context "/admin" request
            (wrap-authorize clocking.views.admin/handler  #{::admin}))
+  (context "/api" request clocking.views.api/handler)
   (GET "/login" request (clocking.views.core/login-page))
   (GET "/logout" request (logout* (resp/redirect (str (:context request) "/"))))
   (route/resources "/")

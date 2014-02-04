@@ -11,7 +11,6 @@
     (when (.find matcher) ;; Check if it matches.
       (zipmap [:match :user :password :host :port :db] (re-groups matcher))))) ;; Construct an options map.
 
-
 (defdb dev (postgres (split-db-url db-url)))
 
 (defentity employees
@@ -49,7 +48,12 @@
 ;todo, generalize
 (defn convert-date [event]
   (when-not (nil? event)
-    {:time (from-sql-date (:time event)) :type (:type event) :id (:id event) :employee_id (:employee_id event)}))
+    {:time (when-not (nil? (:time event)) (from-sql-date (:time event)))  :type (:type event) :id (:id event) :employee_id (:employee_id event)}))
+
+(defn all-events-all-employees []
+  (map convert-date
+       (select events (order :time))))
+
 
 (defn all-events [employee-id]
   (map convert-date

@@ -17,6 +17,7 @@
                            [lein-light-nrepl "0.0.9"]
                            [com.cemerick/friend "0.2.0"]
                            [ring/ring-core "1.2.1"]
+                           [clojure-csv/clojure-csv "2.0.1"]
                            ]
             :repl-options {:nrepl-middleware [lighttable.nrepl.handler/lighttable-ops]}
             :dev-dependencies [[org.clojure/java.jdbc "0.1.1"]
