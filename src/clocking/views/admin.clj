@@ -1,4 +1,4 @@
-(ns clocking.views.employees
+(ns clocking.views.admin
   (:require [clocking.views.common :as common]
             [clocking.db :as db]
             [clocking.models.employees :as employee]
@@ -12,16 +12,6 @@
    hiccup.element))
 
 
-;;TODO let passphrase be property
-;;(pre-route "/admin/*" {}
-;;           (when-not
-;;               (= "vectra" (cookie/get :passphrase))
-;;             (resp/redirect "/login")))
-;;
-;;(pre-route "/_fetch" {}
-;;           (when-not
-;;               (= "vectra" (cookie/get :passphrase))
-;;             (resp/redirect "/login")))
 
 
 (defn cljs-env-aware []
@@ -78,9 +68,8 @@
                    (cljs-env-aware))))
 
 (defroutes handler
-  (context "/admin" []
            (GET "/employees" [] (employees-page))
            (GET "/employees/:id" [id] (employee-page id))
            (POST "/employees/add" {params :params} (add-employee params))
            (GET "/incomplete" [] (incomplete-page))
-            ))
+            )

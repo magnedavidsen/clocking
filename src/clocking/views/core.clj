@@ -52,28 +52,26 @@
        [:p employee-id " has been clocked out."]
        [:meta {:http-equiv "refresh" :content "2;url=/"}]))))
 
+(def login-form
+  [:div {:class "row"}
+   [:div {:class "columns small-12"}
+    [:h3 "Login"]
+    [:div {:class "row"}
+     [:form {:method "POST" :action "login" :class "columns small-4"}
+      [:div "Username" [:input {:type "text" :name "username"}]]
+      [:div "Password" [:input {:type "password" :name "password"}]]
+      [:div [:input {:type "submit" :class "button" :value "Login"}]]]]]])
+
 (defn login-page []
   (common/layout "index"
-                 (form-to {:autocomplete "off"} [:post "/login"]
+                 (form-to {:autocomplete "off"} [:post "login"]
                           [:div {:class "label-input-row"}
-                           (text-field {:class "passphrase" :size "10" :maxlength "20"} "passphrase")]
+                           (text-field {:class "passphrase" :size "10" :maxlength "20"} "username")
+                           (password-field {:class "passphrase" :size "10" :maxlength "20"} "password")]
                           (submit-button {:class "log-in"} "log in"))))
-
-(defn login [passphrase]
-  (cookie/put! :passphrase passphrase)
-  (if (= "vectra" passphrase)
-    (resp/redirect "/admin/employees")
-    (resp/redirect "/")))
-
-(defn logout []
-  (cookie/put! :passphrase "")
-  (resp/redirect "/"))
 
 (defroutes handler
   (GET "/" [] (index-page))
-  (GET "/login" [] (login-page))
-  (POST "/login" {params :params} (login (params :passphrase)))
-  (GET "/logout"[] (logout))
   (POST "/clockin" {params :params} (clockin-page (params :employee-id)))
   (POST "/clockout" {params :params} (clockout-page (params :hidden-employee-id)))
   )
