@@ -18,3 +18,5 @@ war/
 src/clocking/scratch.clj
 src/clocking/scratchpad.clj
 .nrepl-port
+resources/public/js/cljs-debug.js
+resources/public/js/cljs.js
