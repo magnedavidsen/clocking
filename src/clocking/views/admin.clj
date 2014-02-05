@@ -64,6 +64,7 @@
   (let [id-int (Integer/parseInt id)]
     (common/layout-cljs "admin"
                    [:h1 (:name (first  (db/get-employee id-int)))]
+                   [:a {:href (str "/api/event/" id "/report.csv")} "Download report"]
                    [:div {:id "employee-app"}]
                    (cljs-env-aware))))
 
