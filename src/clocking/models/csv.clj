@@ -18,10 +18,15 @@
   (if (nil? timestamp) ""
     (timeformat/unparse date-formatter (time/to-time-zone timestamp (time/default-time-zone)))))
 
+(defn interval-in-minutes [clock-in clock-out]
+  (if (or (nil? clock-in) (nil? clock-out)) ""
+    (if (time/before? clock-out clock-in) ""
+      (time/in-minutes (time/interval clock-in clock-out)))))
+
 (defn map-to-string-seq-seq [events]
   (defn stringify-event [event]
     (let [new-map [(:employee_id event)  (date-to-csv-date (:date event)) (time-to-csv-time (:clock-in event))
-                   (time-to-csv-time (:clock-out event)) (time/in-minutes (time/interval (:clock-in event) (:clock-out event)))]]
+                   (time-to-csv-time (:clock-out event)) (interval-in-minutes (:clock-in event) (:clock-out event))]]
       (map #(str "" % "") new-map)
       ))
   (map stringify-event events))
