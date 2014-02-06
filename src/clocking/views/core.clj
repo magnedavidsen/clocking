@@ -9,12 +9,12 @@
 (defn index-page []
   (common/layout "index"
                  [:div {:class "form"}
-                  (form-to {:autocomplete "off"} [:post "/clockin"]
+                  (form-to {:autocomplete "off"} [:post "/user/clockin"]
                            [:div {:class "label-input-row"}
                             (label "employee-id" "id: ")
                              (text-field  {:class "employee-id" :maxlength "3" :onchange "setHiddenField()" :autofocus "autofocus" :type "text" :pattern "[0-9]*"} "employee-id")]
                            (submit-button {:class "clock-in"} "clock in"))
-                  (form-to [:post "/clockout"]
+                  (form-to [:post "/user/clockout"]
                            (hidden-field "hidden-employee-id")
                            (submit-button {:class "clock-out"} "clock out"))
                   [:p {:class "help-text"}]]))
@@ -44,13 +44,13 @@
       (common/layout
        "index"
        [:p employee-id " is not a registered user."]
-       [:meta {:http-equiv "refresh" :content "2;url=/"}]))
+       [:meta {:http-equiv "refresh" :content "2;url=/user"}]))
     (do
       (db/create-event "clock-out" (Integer/parseInt employee-id))
       (common/layout
        "index"
        [:p employee-id " has been clocked out."]
-       [:meta {:http-equiv "refresh" :content "2;url=/"}]))))
+       [:meta {:http-equiv "refresh" :content "2;url=/user"}]))))
 
 (def login-form
   [:div {:class "row"}
@@ -74,8 +74,8 @@
 
 (defroutes handler
   (GET "/" [] (index-page))
-  (POST "/clockin" {params :params} (clockin-page (params :employee-id)))
-  (POST "/clockout" {params :params} (clockout-page (params :hidden-employee-id)))
+  (POST "/clockin" {params :params} (clockin-page (:employee-id params)))
+  (POST "/clockout" {params :params} (clockout-page (:hidden-employee-id params)))
   )
 
 

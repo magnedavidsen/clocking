@@ -27,16 +27,16 @@
 (derive ::admin ::user)
 
 (defroutes user-routes
-  clocking.views.api/handler
   clocking.views.core/handler)
 
 (defroutes main-routes
-  (context "/" request
+  (context "/user" request
            (wrap-authorize user-routes  #{::user}))
 
   (context "/admin" request
            (wrap-authorize clocking.views.admin/handler  #{::admin}))
   (context "/api" request clocking.views.api/handler)
+  (GET "/" request (clocking.views.core/login-page))
   (GET "/login" request (clocking.views.core/login-page))
   (GET "/logout" request (logout* (resp/redirect (str (:context request) "/"))))
   (route/resources "/")
