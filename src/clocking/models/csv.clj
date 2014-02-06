@@ -21,7 +21,7 @@
 (defn map-to-string-seq-seq [events]
   (defn stringify-event [event]
     (let [new-map [(:employee_id event)  (date-to-csv-date (:date event)) (time-to-csv-time (:clock-in event))
-                   (time-to-csv-time (:clock-out event)) "=2+2"]] ;(time/in-minutes (time/interval (:clock-in event) (:clock-out event)))]]
+                   (time-to-csv-time (:clock-out event)) (time/in-minutes (time/interval (:clock-in event) (:clock-out event)))]]
       (map #(str "" % "") new-map)
       ))
   (map stringify-event events))
@@ -29,5 +29,5 @@
 
 (defn generate-csv [events]
   (str
-  (write-csv [["Employee id" "Date" "Clocked in" "Clocked out"]] :delimiter ";")
+  (write-csv [["Employee id" "Date" "Clocked in" "Clocked out" "Minutes worked"]] :delimiter ";")
   (write-csv (map-to-string-seq-seq events) :delimiter ";")))
