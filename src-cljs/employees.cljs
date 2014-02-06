@@ -7,6 +7,7 @@
             [goog.ui.DatePicker]
             [goog.ui.DatePicker.Events]
             [goog.date.Date]
+            [goog.date.Interval]
             [clojure.browser.dom :as dom]
             [dommy.template :as template]
             [ajax.core :refer [GET POST]]))
@@ -14,9 +15,12 @@
 (def userid (js/parseInt (last (clojure.string/split js/document.URL #"/"))))
 
 (defn date-in-range [date from-date to-date]
-  (and
-   (>= 0 (goog.date.Date.compare from-date date))
-   (>= 0 (goog.date.Date.compare date to-date))))
+  (let [to-date-plus-one-day (doto (.clone to-date)
+                    (.add (goog.date.Interval. 0 0 1)))]
+    (and
+     (>= 0 (goog.date.Date.compare from-date date))
+     (>= 0 (goog.date.Date.compare date to-date-plus-one-day))))
+  )
 
 (defn create-datepicker [date]
   (let [picker (new goog.ui.DatePicker)]
@@ -50,10 +54,12 @@
     [:table [:tr [:th "Date"] [:th "Clocked in"] [:th "Clocked out" ] [:th "Sum"]]
      (map event-row events)]]))
 
+;;todo reimplement
 (defn filter-events-between [events from-date to-date]
-  todo reimplement(filter #(date-in-range (:date %) from-date to-date ) events))
+  (filter #(date-in-range (:date %) from-date to-date ) events))
 
 (defn refresh-employee-report-filtered [events from-date to-date]
+
   (dom/replace-node (googdom/getElementByClass "employee-report") (employee-report (filter-events-between events from-date to-date)))
   )
 
