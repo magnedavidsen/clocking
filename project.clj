@@ -13,7 +13,7 @@
                            [prismatic/dommy "0.0.1"]
                            [cljs-ajax "0.2.3"]
                            [fogus/ring-edn "0.2.0"]
-                           [org.clojure/clojurescript "0.0-2138"]
+                           [org.clojure/clojurescript "0.0-2156"]
                            [lein-light-nrepl "0.0.9"]
                            [com.cemerick/friend "0.2.0"]
                            [ring/ring-core "1.2.1"]
