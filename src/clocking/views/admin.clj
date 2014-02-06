@@ -16,10 +16,10 @@
 
 (defn cljs-env-aware []
   (if (= (System/getenv "ENV") "dev")
-                     [:div
-                      [:script {:type "text/javascript" :src "/js/cljs-debug.js"}]
-                      [:script {:type "text/javascript"} "goog.require('clocking.client.repl')"]]
-                     [:script {:type "text/javascript" :src "/js/cljs.js"}]))
+    [:div
+     [:script {:type "text/javascript" :src "/js/cljs-debug.js"}]
+     [:script {:type "text/javascript"} "goog.require('clocking.client.repl')"]]
+    [:script {:type "text/javascript" :src "/js/cljs.js"}]))
 
 (defn add-employee-form []
   (form-to {:autocomplete "off"} [:post "/admin/employees/add"]
@@ -41,14 +41,20 @@
 (defn employees-table [employees]
   [:table
    [:tr
-   [:th "ID"] [:th ""] [:th "Name"] [:th "Last event"] [:th ""]]
+    [:th "ID"] [:th ""] [:th "Name"] [:th "Last event"] [:th ""]]
    (map employee-row employees)])
+
+(defn admin-page []
+  (common/layout "admin"
+                 [:h1 "Admin"]
+                 [:p (link-to (str  "/admin/employees") "Employees")]
+                 [:p (link-to (str  "/admin/incomplete") "Incomplete clockings")]))
 
 (defn employees-page []
   (common/layout "admin"
-   [:h1 "Employees"]
-   (add-employee-form)
-   (employees-table (db/list-all-employees))))
+                 [:h1 "Employees"]
+                 (add-employee-form)
+                 (employees-table (db/list-all-employees))))
 
 (defn incomplete-page []
   (common/layout-cljs "admin"
@@ -63,14 +69,15 @@
 (defn employee-page [id]
   (let [id-int (Integer/parseInt id)]
     (common/layout-cljs "admin"
-                   [:h1 (:name (first  (db/get-employee id-int)))]
-                   [:a {:href (str "/api/event/" id "/report.csv")} "Download report"]
-                   [:div {:id "employee-app"}]
-                   (cljs-env-aware))))
+                        [:h1 (:name (first  (db/get-employee id-int)))]
+                        [:a {:href (str "/api/event/" id "/report.csv")} "Download report"]
+                        [:div {:id "employee-app"}]
+                        (cljs-env-aware))))
 
 (defroutes handler
-           (GET "/employees" [] (employees-page))
-           (GET "/employees/:id" [id] (employee-page id))
-           (POST "/employees/add" {params :params} (add-employee params))
-           (GET "/incomplete" [] (incomplete-page))
-            )
+  (GET "/"[] (admin-page))
+  (GET "/employees" [] (employees-page))
+  (GET "/employees/:id" [id] (employee-page id))
+  (POST "/employees/add" {params :params} (add-employee params))
+  (GET "/incomplete" [] (incomplete-page))
+  )
