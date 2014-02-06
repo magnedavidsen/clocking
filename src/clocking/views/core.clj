@@ -66,8 +66,9 @@
   (common/layout "index"
                  (form-to {:autocomplete "off"} [:post "login"]
                           [:div {:class "label-input-row"}
-                           (text-field {:class "passphrase" :size "10" :maxlength "20"} "username")
-                           (password-field {:class "passphrase" :size "10" :maxlength "20"} "password")]
+                           (label {:for "username"} "u:")
+                           (text-field {:class "passphrase" :size "5" :maxlength "20" :value "user"} "username")
+                           (text-field {:class "passphrase" :size "10" :maxlength "20"} "password")]
                           (submit-button {:class "log-in"} "log in"))))
 
 (defroutes handler
