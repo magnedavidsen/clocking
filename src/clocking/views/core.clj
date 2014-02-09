@@ -20,7 +20,6 @@
                   [:p {:class "help-text"}]]))
 
 (defn clockin-page [employee-id]
-  (println "test")
   (if
       (empty? (db/get-employee (Integer/parseInt employee-id)))
     (do
