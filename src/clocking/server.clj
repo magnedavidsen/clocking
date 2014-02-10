@@ -31,6 +31,7 @@
   clocking.views.core/handler)
 
 (defroutes main-routes
+  clocking.views.status/handler
   (context "/user" request
            (wrap-authorize user-routes  #{::user}))
 
