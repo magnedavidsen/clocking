@@ -6,7 +6,7 @@
             [noir.response :as resp]
             )
   (:use
-   clojure.string
+   [clojure.string :only (blank?)]
    compojure.core
    hiccup.form
    hiccup.page
