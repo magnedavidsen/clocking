@@ -10,6 +10,7 @@
             clocking.views.core
             clocking.views.admin
             clocking.views.api
+            clocking.views.status
             [hiccup.page :as h]
             [ring.util.response :as resp]
             [cemerick.friend :as friend]

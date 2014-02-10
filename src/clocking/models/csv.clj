@@ -10,6 +10,8 @@
 (def time-formatter (timeformat/formatter "HH:mm"))
 (def date-formatter (timeformat/formatter "dd.MM.yyyy"))
 
+(time/default-time-zone)
+
 (defn time-to-csv-time [timestamp]
   (if (nil? timestamp) ""
     (timeformat/unparse time-formatter (time/to-time-zone timestamp (time/default-time-zone)))))
