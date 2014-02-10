@@ -6,12 +6,15 @@
             [noir.response :as resp]
             )
   (:use
+   clojure.string
    compojure.core
    hiccup.form
    hiccup.page
    hiccup.element))
 
-
+(defn parseIntOrEmptyString [number]
+  (if (blank? number) 0 (Integer/parseInt number))
+  )
 
 
 (defn cljs-env-aware []
@@ -33,15 +36,32 @@
 
            (submit-button {:class "add-employee"}  "Add")))
 
+(defn update-employee-form [user-id]
+  (form-to {:autocomplete "off"} [:put (str "/admin/employees/" user-id)]
+           (let [user (first (db/get-employee (Integer/parseInt user-id)))]
+
+             [:span {:class "label-input-row"}
+              (label "employee-id" "id: ")
+              (text-field {:class "employee-id" :maxlength "3" :readonly "true"} "employee-id" user-id)
+
+              (label "norpost-id" "norpost id: ")
+              (text-field {:class "employee-id"} "norpost-id" (:norpost_id user))
+
+              (label "employee-name" "name: ")
+              (text-field {:class "employee-name"} "employee-name" (:name user))])
+
+           (submit-button {:class "add-employee"}  "Save")))
+
+
 (defn employee-row [{:keys [id name]}]
   [:tr
    [:td id] [:td {:class (if (employee/working-now? id) "online icon" "offline icon")} "&#128100;"] [:td name] [:td {:class "timestamp"} (:time (db/most-recent-event id))]
-   [:td (link-to (str  "/admin/employees/" id) "Report")]])
+   [:td (link-to (str  "/admin/employees/" id) "Report")] [:td (link-to (str  "/admin/employees/" id "/edit") "Edit")]])
 
 (defn employees-table [employees]
   [:table
    [:tr
-    [:th "ID"] [:th ""] [:th "Name"] [:th "Last event"] [:th ""]]
+    [:th "ID"] [:th ""] [:th "Name"] [:th "Last event"] [:th ""] [:th ""]]
    (map employee-row employees)])
 
 (defn admin-page []
@@ -56,6 +76,12 @@
                  (add-employee-form)
                  (employees-table (db/list-all-employees))))
 
+(defn edit-employee-page [user-id]
+  (common/layout "admin"
+                 [:h1 "Employees"]
+                 (update-employee-form user-id)
+                 (employees-table (db/list-all-employees))))
+
 (defn incomplete-page []
   (common/layout-cljs "admin"
                       [:h1 "Incomplete clockings"]
@@ -64,6 +90,10 @@
 
 (defn add-employee [employee]
   (db/create-employee (Integer/parseInt  (:employee-id employee)) (:employee-name employee))
+  (employees-page))
+
+(defn update-employee [employee]
+  (db/update-user (Integer/parseInt  (:employee-id employee)) (:employee-name employee) (parseIntOrEmptyString (:norpost-id employee)))
   (employees-page))
 
 (defn employee-page [id]
@@ -78,6 +108,8 @@
   (GET "/"[] (admin-page))
   (GET "/employees" [] (employees-page))
   (GET "/employees/:id" [id] (employee-page id))
+  (PUT "/employees/:id" {params :params} (update-employee params))
+  (GET "/employees/:id/edit" [id] (edit-employee-page id))
   (POST "/employees/add" {params :params} (add-employee params))
   (GET "/incomplete" [] (incomplete-page))
   )

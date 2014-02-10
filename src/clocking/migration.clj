@@ -16,7 +16,8 @@
   (sql/with-connection db
     (sql/create-table :employees
                       [:id :integer "PRIMARY KEY"]
-                      [:name :text "NOT NULL"])))
+                      [:name :text "NOT NULL"]
+                      [:norpost_id :integer])))
 
 (defn create-events []
   (sql/with-connection db

@@ -16,16 +16,16 @@
 (defentity employees
   (pk :id)
   (table :employees)
-  (entity-fields :id :name)
+  (entity-fields :id :name :norpost_id)
   (database dev))
 
 (defn get-employee [id]
   (select employees
           (where {:id id})))
 
-(defn create-employee [id, name]
+(defn create-employee [id, name, norpost_id]
    (insert employees
-           (values {:id id, :name name})))
+           (values {:id id, :name name, :norpost_id norpost_id})))
 
 (defn delete-employee [id]
   (delete employees
@@ -34,9 +34,9 @@
 (defn list-all-employees []
   (select employees))
 
-(defn update-user [id, name]
+(defn update-user [id, name, norpost_id]
    (update employees
-           (set-fields {:name name})
+           (set-fields {:name name :norpost_id norpost_id})
            (where {:id id})))
 
 (defentity events
