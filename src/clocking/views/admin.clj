@@ -28,9 +28,11 @@
   (form-to {:autocomplete "off"} [:post "/admin/employees/add"]
            [:span {:class "label-input-row"}
             (label "employee-id" "id: ")
-            (text-field {:class "employee-id" :maxlength "3"} "employee-id")]
+            (text-field {:class "employee-id" :maxlength "3"} "employee-id")
 
-           [:span {:class "label-input-row"}
+            (label "norpost-id" "norpost id: ")
+            (text-field {:class "employee-id"} "norpost-id" (:norpost_id user))
+
             (label "employee-name" "name: ")
             (text-field {:class "employee-name"} "employee-name")]
 
@@ -53,15 +55,15 @@
            (submit-button {:class "add-employee"}  "Save")))
 
 
-(defn employee-row [{:keys [id name]}]
+(defn employee-row [{:keys [id name norpost_id]}]
   [:tr
-   [:td id] [:td {:class (if (employee/working-now? id) "online icon" "offline icon")} "&#128100;"] [:td name] [:td {:class "timestamp"} (:time (db/most-recent-event id))]
+   [:td id] [:td norpost_id] [:td {:class (if (employee/working-now? id) "online icon" "offline icon")} "&#128100;"] [:td name] [:td {:class "timestamp"} (:time (db/most-recent-event id))]
    [:td (link-to (str  "/admin/employees/" id) "Report")] [:td (link-to (str  "/admin/employees/" id "/edit") "Edit")]])
 
 (defn employees-table [employees]
   [:table
    [:tr
-    [:th "ID"] [:th ""] [:th "Name"] [:th "Last event"] [:th ""] [:th ""]]
+    [:th "ID"] [:th "Norpost ID"] [:th ""] [:th "Name"] [:th "Last event"] [:th ""] [:th ""]]
    (map employee-row employees)])
 
 (defn admin-page []
@@ -89,7 +91,7 @@
                       (cljs-env-aware)))
 
 (defn add-employee [employee]
-  (db/create-employee (Integer/parseInt  (:employee-id employee)) (:employee-name employee))
+  (db/create-employee (Integer/parseInt  (:employee-id employee)) (:employee-name employee) (Integer/parseInt  (:norpost-id employee)))
   (employees-page))
 
 (defn update-employee [employee]

@@ -32,7 +32,7 @@
           (where {:id id})))
 
 (defn list-all-employees []
-  (select employees))
+  (select employees (order :name)))
 
 (defn update-user [id, name, norpost_id]
    (update employees
