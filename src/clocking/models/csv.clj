@@ -4,21 +4,14 @@
         [clocking.db :as db]
         [clocking.models.events :as events]
    [clj-time.format :as timeformat]
-   [clj-time.core :as time]
-   [clj-time.local :as timelocal]))
+   [clj-time.core :as time]))
 
 (def time-formatter (timeformat/formatter "HH:mm"))
 (def date-formatter (timeformat/formatter "dd.MM.yyyy"))
 
-(time/default-time-zone)
-
-(defn time-to-csv-time [timestamp]
+(defn to-csv-timestamp-with-formatter [timestamp, formatter]
   (if (nil? timestamp) ""
-    (timeformat/unparse time-formatter (time/to-time-zone timestamp (time/default-time-zone)))))
-
-(defn date-to-csv-date [timestamp]
-  (if (nil? timestamp) ""
-    (timeformat/unparse date-formatter (time/to-time-zone timestamp (time/default-time-zone)))))
+    (timeformat/unparse date-formatter (time/from-time-zone timestamp (time/time-zone-for-offset -1)))))
 
 (defn interval-in-minutes [clock-in clock-out]
   (if (or (nil? clock-in) (nil? clock-out)) ""
@@ -27,12 +20,11 @@
 
 (defn map-to-string-seq-seq [events]
   (defn stringify-event [event]
-    (let [new-map [(:employee_id event)  (date-to-csv-date (:date event)) (time-to-csv-time (:clock-in event))
-                   (time-to-csv-time (:clock-out event)) (interval-in-minutes (:clock-in event) (:clock-out event))]]
+    (let [new-map [(:employee_id event)  (to-csv-timestamp-with-formatter (:date event) date-formatter) (to-csv-timestamp-with-formatter (:clock-in event) time-formatter)
+                   (to-csv-timestamp-with-formatter (:clock-out event) time-formatter) (interval-in-minutes (:clock-in event) (:clock-out event))]]
       (map #(str "" % "") new-map)
       ))
   (map stringify-event events))
-
 
 (defn generate-csv [events]
   (str
