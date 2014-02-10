@@ -23,7 +23,7 @@
                                    (conj paired-events (vector (first events)))))))
 
 (defn flatten-type-and-time [event]
-  {(keyword (:type event)) (:time event)})
+  {(keyword (:type event)) (:time event) (keyword (str (:type event) "-id")) (:id event)})
 
 (defn flatten-two-events [events]
   (let [flat-type-time (map flatten-type-and-time events)]

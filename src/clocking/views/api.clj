@@ -8,15 +8,12 @@
    [clocking.db :as db]
    [clocking.models.csv :as csv]))
 
-
-;todo, writer smarter
-(defn convert-date [event]
-  {:clock-in (time/to-date (:clock-in event)) :clock-out (time/to-date (:clock-out event)) :date (time/to-date (:date event)) :employee-id (:employee_id event)})
+(defn convert-dates [event]
+  (reduce #(update-in % [%2] time/to-date) event [:clock-in :clock-out :date]))
 
 (defn get-all-events [employee-id]
-  (map convert-date
+  (map convert-dates
        (events/get-all-events-for-employee employee-id)))
-
 
 (defn get-all-incomplete []
   (defn get-all-events-per-employee []
