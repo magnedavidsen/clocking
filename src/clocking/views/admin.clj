@@ -31,7 +31,7 @@
             (text-field {:class "employee-id" :maxlength "3"} "employee-id")
 
             (label "norpost-id" "norpost id: ")
-            (text-field {:class "employee-id"} "norpost-id" (:norpost_id user))
+            (text-field {:class "employee-id"} "norpost-id" )
 
             (label "employee-name" "name: ")
             (text-field {:class "employee-name"} "employee-name")]
