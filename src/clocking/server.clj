@@ -37,7 +37,8 @@
 
   (context "/admin" request
            (wrap-authorize clocking.views.admin/handler  #{::admin}))
-  (context "/api" request clocking.views.api/handler)
+  (context "/api" request
+           (wrap-authorize clocking.views.api/handler  #{::admin}))
   (GET "/" request (resp/redirect (str (:context request) "/user")))
   (GET "/login" request (clocking.views.core/login-page))
   (GET "/logout" request (logout* (resp/redirect (str (:context request) "/"))))

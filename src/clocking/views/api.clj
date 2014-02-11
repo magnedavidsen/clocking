@@ -28,6 +28,11 @@
     (db/save-event {:type (:type event) :employee-id (:employee-id event) :time (time/to-timestamp time)}))
   "OK")
 
+(defn delete-event [event-id]
+  (db/delete-event (Integer/parseInt event-id))
+  (println "Event: " event-id " was deleted")
+  "OK")
+
 (defn generate-response [data & [status]]
   {:status (or status 200)
    :headers {"Content-Type" "application/edn"}
@@ -35,6 +40,7 @@
 
 (defroutes handler
   (GET "/event/:id" [id] (generate-response (get-all-events (Integer/parseInt id))))
+  (PUT "/event/delete/:id" [id] (generate-response (delete-event id)))
   (GET "/event/:id/report.csv" [id] {:status 200
                                      :headers {"Content-Type" "file/csv"}
                                      :body (csv/generate-csv (events/get-all-events-for-employee (Integer/parseInt id)) )})

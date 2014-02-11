@@ -5,11 +5,11 @@
 (def date-formatter (new goog.i18n.DateTimeFormat "dd/MM/yyyy"))
 (def time-formatter (new goog.i18n.DateTimeFormat "HH:mm"))
 
-;;TODO generalize to fix everything with a :date-field
+;; TODO remove hackish solution employee_id/employee-id
 (defn convert-date-to-goog [event]
   (let [date (new goog.date.Date)]
     (.set date (:date event))
-    {:clock-in (:clock-in event) :clock-out (:clock-out event) :date date :employee-id (:employee-id event)}))
+    (assoc event :date date :employee-id (:employee_id event))))
 
 (defn minutes-between [clock-in clock-out]
   (when (and clock-in clock-out)
