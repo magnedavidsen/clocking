@@ -16,7 +16,7 @@
 (def my_regex #"\d{2}:\d{2}")
 
 (defn save-new-event [event]
-  (.log js/console (+ "Sending object to backend: " (str event)))
+  (.log js/console (str "Sending object to backend: " event))
   (POST "/api/event"
         {:params event
          :handler event-changed
@@ -44,7 +44,7 @@
 ;; TODO use DELETE as soon as it is implemented inn cljs-ajax
 (defn delete-event [event-id]
   (let [path (str "/api/event/delete/" event-id)]
-    (.log js/console (+ "Deleting event number: " (str event-id)))
+    (.log js/console (str "Deleting event number: " event-id))
     (PUT path
          {
          :handler event-changed
