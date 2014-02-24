@@ -33,10 +33,10 @@
         {:type "clock-out", :employee_id 100, :time #inst "2012-10-17T23:49:07.818-00:00", :id 4}]))
 
 (def one-event-flattened
-  {:employee_id 100, :date (from-sql-date #inst "2012-10-16T23:49:07.818-00:00"), :clock-in (from-sql-date #inst  "2012-10-16T23:49:07.818-00:00")})
+  {:employee_id 100, :date (from-sql-date #inst "2012-10-16T23:49:07.818-00:00"), :clock-in (from-sql-date #inst  "2012-10-16T23:49:07.818-00:00"), :clock-in-id 3})
 
 (def two-events-flattened
-  {:employee_id 100, :date (from-sql-date #inst "2012-10-16T23:49:07.818-00:00"),  :clock-in (from-sql-date  #inst "2012-10-16T23:49:07.818-00:00"), :clock-out (from-sql-date #inst "2012-10-16T23:49:07.818-00:00")})
+  {:employee_id 100,:clock-in-id 3,:clock-out-id 4, :date (from-sql-date #inst "2012-10-16T23:49:07.818-00:00"),  :clock-in (from-sql-date  #inst "2012-10-16T23:49:07.818-00:00"), :clock-out (from-sql-date #inst "2012-10-16T23:49:07.818-00:00")})
 
 (def list-of-flattened-events
   [{:employee_id 100, :date (from-sql-date #inst "2012-10-16T23:49:07.818-00:00"), :clock-in (from-sql-date #inst  "2012-10-16T23:49:07.818-00:00")}
@@ -58,6 +58,8 @@
 (deftest one-event-get-flattened-correctly
   (is (= one-event-flattened
          (events/flatten-two-events one-event))))
+
+(events/flatten-two-events one-event)
 
 (deftest same-day-returns-true
   (is
