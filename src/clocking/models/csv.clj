@@ -11,7 +11,7 @@
 
 (defn to-csv-timestamp-with-formatter [timestamp, formatter]
   (if (nil? timestamp) ""
-    (timeformat/unparse date-formatter (time/from-time-zone timestamp (time/time-zone-for-offset -1)))))
+    (timeformat/unparse formatter (time/from-time-zone timestamp (time/time-zone-for-offset -1)))))
 
 (defn interval-in-minutes [clock-in clock-out]
   (if (or (nil? clock-in) (nil? clock-out)) ""
