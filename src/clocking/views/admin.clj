@@ -70,7 +70,8 @@
   (common/layout "admin"
                  [:h1 "Admin"]
                  [:p (link-to (str  "/admin/employees") "Employees")]
-                 [:p (link-to (str  "/admin/incomplete") "Incomplete clockings")]))
+                 [:p (link-to (str  "/admin/incomplete") "Incomplete clockings")]
+                 [:p (link-to (str  "/api/events/report.csv") "Excel-report, all employees")]))
 
 (defn employees-page []
   (common/layout "admin"

@@ -11,6 +11,9 @@
 (defn convert-dates [event]
   (reduce #(update-in % [%2] time/to-date) event [:clock-in :clock-out :date]))
 
+(defn get-all-events-paired []
+  (mapcat #(events/get-all-events-for-employee (:id %)) (db/list-all-employees)))
+
 (defn get-all-events [employee-id]
   (map convert-dates
        (events/get-all-events-for-employee employee-id)))
@@ -44,7 +47,10 @@
   (GET "/event/:id/report.csv" [id] {:status 200
                                      :headers {"Content-Type" "file/csv"}
                                      :body (csv/generate-csv (events/get-all-events-for-employee (Integer/parseInt id)) )})
+  (GET "/events/report.csv" []       {:status 200
+                                     :headers {"Content-Type" "file/csv"}
+                                     :body (csv/generate-csv (get-all-events-paired))})
   (POST "/event" {edn-params :edn-params} (generate-response (save-event edn-params)))
   (GET "/incomplete" [] (generate-response (get-all-incomplete))))
 
-
+(csv/generate-csv (get-all-events-paired))
