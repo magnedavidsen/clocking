@@ -52,5 +52,3 @@
                                      :body (csv/generate-csv (get-all-events-paired))})
   (POST "/event" {edn-params :edn-params} (generate-response (save-event edn-params)))
   (GET "/incomplete" [] (generate-response (get-all-incomplete))))
-
-(csv/generate-csv (get-all-events-paired))
