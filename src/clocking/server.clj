@@ -3,6 +3,7 @@
         [ring.adapter.jetty :only (run-jetty)]
         [ring.middleware.reload :only (wrap-reload)]
         [ring.middleware.edn :only (wrap-edn-params)]
+        [ring.middleware.session :only (wrap-session)]
         [hiccup.middleware :only (wrap-base-url)]
         [clocking.middleware :only (wrap-request-logging)])
   (:require [compojure.route :as route]
@@ -53,6 +54,7 @@
                                  {:status 403 :body msg}
                                  (#'friend/default-unauthorized-handler %))
         :workflows [(interactive-form)]})
+      (wrap-session {:cookie-attrs {:max-age 10000000000}})
       (wrap-edn-params)
       (wrap-base-url)
       (wrap-request-logging)
