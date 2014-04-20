@@ -1,6 +1,9 @@
 (ns clocking.models.events
   (:require [clocking.db :as db]
-            [clj-time.core :as time]))
+            [clj-time.core :as time]
+            [clj-time.format :as f]))
+
+(def custom-formatter (f/formatter "yyyyMMdd"))
 
 (defn same-day? [first-event second-event]
   (let [first-date (:time first-event) second-date (:time second-event)]
@@ -34,6 +37,19 @@
 (defn get-all-events-for-employee [id]
   (map flatten-two-events (pair-clockins-and-clockouts
                            (db/all-events id) [])))
+
+(defn get-all-events-for-employee-in-interval [id from to]
+
+  (def to-plus-one
+    (time/plus (f/parse custom-formatter to) (time/days 1)))
+
+  (defn within-interval [event]
+    (time/within? (time/interval (f/parse custom-formatter from) to-plus-one)
+              (:time event)))
+
+  (map flatten-two-events (pair-clockins-and-clockouts
+                            (filter within-interval
+                             (db/all-events id)) [])))
 
 (defn incomplete-days-in-events [paired-events]
   (filter #(or (nil? (:clock-out %)) (nil? (:clock-in %))) paired-events))

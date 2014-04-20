@@ -49,6 +49,7 @@
 (defn employee-report [events]
   (template/node
    [:div {:class "employee-report"}
+    [:a {:href (str "/api/event/" userid "/" (.format common/date-formatter-link (.getDate from-datepicker)) "/" (.format common/date-formatter-link (.getDate to-datepicker)) "/report.csv")} "Download report"]
     [:div (str "Showing hours from " (.format common/date-formatter (.getDate from-datepicker)) " to " (.format common/date-formatter (.getDate to-datepicker)) )]
     [:div {:class "total-hours"} (str "Total hours: " (common/format-minutes (common/sum-hours events)))]
     [:table [:tr [:th "Date"] [:th "Clocked in"] [:th "Clocked out" ] [:th "Sum"]]

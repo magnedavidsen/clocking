@@ -47,6 +47,11 @@
   (GET "/event/:id/report.csv" [id] {:status 200
                                      :headers {"Content-Type" "file/csv"}
                                      :body (csv/generate-csv (events/get-all-events-for-employee (Integer/parseInt id)) )})
+
+  (GET "/event/:id/:from/:to/report.csv" [id from to] {:status 200
+                                     :headers {"Content-Type" "file/csv"}
+                                     :body (csv/generate-csv (events/get-all-events-for-employee-in-interval (Integer/parseInt id) from to ) )})
+
   (GET "/events/report.csv" []       {:status 200
                                      :headers {"Content-Type" "file/csv"}
                                      :body (csv/generate-csv (get-all-events-paired))})

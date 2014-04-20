@@ -3,6 +3,7 @@
             [goog.date.Date]))
 
 (def date-formatter (new goog.i18n.DateTimeFormat "dd/MM/yyyy"))
+(def date-formatter-link (new goog.i18n.DateTimeFormat "yyyyMMdd"))
 (def time-formatter (new goog.i18n.DateTimeFormat "HH:mm"))
 
 ;; TODO remove hackish solution employee_id/employee-id

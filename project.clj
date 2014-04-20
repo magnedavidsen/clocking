@@ -9,7 +9,7 @@
                            [korma "0.3.0-RC6"]
                            [postgresql "9.1-901-1.jdbc4"]
                            [org.clojure/java.jdbc "0.2.3"]
-                           [clj-time "0.6.0"]
+                           [clj-time "0.7.0"]
                            [prismatic/dommy "0.0.1"]
                            [cljs-ajax "0.2.3"]
                            [fogus/ring-edn "0.2.0"]
