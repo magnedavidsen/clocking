@@ -16,7 +16,7 @@
 (defn interval-in-hours [clock-in clock-out]
   (if (or (nil? clock-in) (nil? clock-out)) ""
     (if (time/before? clock-out clock-in) ""
-       (/ (time/in-minutes (time/interval clock-in clock-out)) 60.0))))
+      (clojure.string/replace-first (str (/ (time/in-minutes (time/interval clock-in clock-out)) 60.0)) "." ","))))
 
 (defn map-to-string-seq-seq [events]
   (defn stringify-event [event]
