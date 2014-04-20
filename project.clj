@@ -3,10 +3,10 @@
             :min-lein-version "2.3.4"
             :jvm-opts ["-Xmx1024M"]
 
-            :dependencies [[org.clojure/clojure "1.5.1"]
+            :dependencies [[org.clojure/clojure "1.6.0"]
                            [compojure "1.1.6"]
-                           [lib-noir "0.7.9"]
-                           [korma "0.3.0-RC6"]
+                           [lib-noir "0.8.2"]
+                           [korma "0.3.1"]
                            [postgresql "9.1-901-1.jdbc4"]
                            [org.clojure/java.jdbc "0.2.3"]
                            [clj-time "0.7.0"]
